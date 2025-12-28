@@ -14,8 +14,12 @@ export default function Home() {
   return (
     <>
       <main className="relative min-h-screen bg-black overflow-hidden">
-        {/* Main Content - Always rendered, visible through the split */}
-        <div className="relative w-full">
+        {/* Main Content - Hidden during loading, visible after */}
+        <div 
+          className={`relative w-full transition-opacity duration-500 ${
+            isLoadingComplete ? "opacity-100" : "opacity-0 pointer-events-none"
+          }`}
+        >
           <Synapse />
         </div>
 
