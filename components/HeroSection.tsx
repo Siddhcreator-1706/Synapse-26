@@ -90,11 +90,18 @@ export function HeroSection() {
           ref={titleRef}
           className="synapse-title text-center text-white"
           style={{
-            fontSize: "clamp(3rem, 15vw, 12rem)",
+            fontSize: "clamp(4rem, 15vw, 12rem)",
             fontWeight: 900,
-            letterSpacing: "-0.02em",
-            lineHeight: 0.9,
-            textShadow: "0 0 60px rgba(255,255,255,0.1)",
+            fontFamily: "var(--font-bebas), 'Bebas Neue', 'Impact', 'Arial Black', sans-serif",
+            letterSpacing: "0.05em",
+            lineHeight: 0.95,
+            textShadow: `
+              0 0 10px rgba(255, 255, 255, 0.3),
+              0 0 30px rgba(255, 255, 255, 0.2),
+              0 0 60px rgba(255, 0, 0, 0.3),
+              0 4px 20px rgba(0, 0, 0, 0.5)
+            `,
+            textTransform: "uppercase",
           }}
         >
           SYNAPSE&apos; 26

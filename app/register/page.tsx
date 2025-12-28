@@ -13,23 +13,17 @@ export default function RegisterPage() {
       {/* Left Side - Image */}
       <div className="hidden lg:flex lg:w-1/2 relative">
         <Image src="/joker.jpg" alt="Joker Cards Background" fill className="object-cover" priority />
-        {/* Dice Logo Overlay */}
+        {/* Synapse Logo Overlay */}
         <div className="absolute top-8 left-8">
-          <svg
-            width="60"
-            height="60"
-            viewBox="0 0 60 60"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="text-white"
-          >
-            <rect x="15" y="15" width="30" height="30" rx="4" stroke="currentColor" strokeWidth="3" fill="none" />
-            <circle cx="22" cy="22" r="3" fill="currentColor" />
-            <circle cx="38" cy="22" r="3" fill="currentColor" />
-            <circle cx="22" cy="38" r="3" fill="currentColor" />
-            <circle cx="38" cy="38" r="3" fill="currentColor" />
-            <circle cx="30" cy="30" r="3" fill="currentColor" />
-          </svg>
+          <div className="relative w-16 h-16">
+            <Image
+              src="/Synapse Logo.png"
+              alt="Synapse Logo"
+              fill
+              className="object-contain"
+              priority
+            />
+          </div>
         </div>
       </div>
 

@@ -17,7 +17,6 @@ import {
   MobileNavMenu,
   MobileNavToggle,
 } from "@/components/ui/Resizable-navbar";
-import Image from "next/image";
 
 // Register ScrollTrigger plugin
 if (typeof window !== "undefined") {
@@ -28,6 +27,7 @@ const navItems = [
   { name: "Home", link: "/" },
   { name: "Events", link: "/events" },
   { name: "About", link: "/about" },
+  { name:"Merchandise", link: "/merchandise" },
 ];
 
 export default function Synapse() {
@@ -39,11 +39,6 @@ export default function Synapse() {
   const paragraph1Ref = useRef<HTMLParagraphElement>(null);
   const paragraph2Ref = useRef<HTMLParagraphElement>(null);
   const paragraph3Ref = useRef<HTMLParagraphElement>(null);
-  
-  // Joker section refs
-  const jokerSectionRef = useRef<HTMLDivElement>(null);
-  const jokerLeftHalfRef = useRef<HTMLDivElement>(null);
-  const jokerRightHalfRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -89,50 +84,6 @@ export default function Synapse() {
             }
           },
         });
-      }
-
-      // Joker Section Scroll Animation with ScrollTrigger
-      if (jokerSectionRef.current && jokerLeftHalfRef.current && jokerRightHalfRef.current) {
-        // Create timeline for the split animation
-        const splitTimeline = gsap.timeline({
-          scrollTrigger: {
-            trigger: jokerSectionRef.current,
-            start: "top top",
-            end: "+=200%",
-            scrub: 1,
-            pin: true,
-            pinSpacing: true,
-            anticipatePin: 1,
-          },
-        });
-
-        // Split animation - slide outward tied to scroll
-        splitTimeline
-          .to(
-            jokerLeftHalfRef.current,
-            {
-              x: "-100%",
-              ease: "power3.inOut",
-            },
-            0
-          )
-          .to(
-            jokerRightHalfRef.current,
-            {
-              x: "100%",
-              ease: "power3.inOut",
-            },
-            0
-          )
-          .to(
-            jokerSectionRef.current,
-            {
-              opacity: 0,
-              pointerEvents: "none",
-              ease: "power2.out",
-            },
-            "-=0.2"
-          );
       }
     });
 
@@ -260,63 +211,8 @@ export default function Synapse() {
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-red-500/5 rounded-full blur-3xl" />
       </section>
 
-      {/* Section 3: Joker Sliding Animation */}
-      <section
-        ref={jokerSectionRef}
-        className="relative z-50 w-full min-h-screen bg-black overflow-visible"
-      >
-        {/* Full Screen Joker Slider Container */}
-        <div className="absolute inset-0 w-full h-full">
-          {/* Left Half - Shows left 50% of image */}
-          <div
-            ref={jokerLeftHalfRef}
-            className="absolute top-0 left-0 bottom-0 origin-left overflow-hidden"
-            style={{
-              width: "50%",
-              height: "100%",
-            }}
-          >
-            <div className="relative w-full h-full" style={{ width: "200%" }}>
-              <Image
-                src="/Joker-Slider.svg"
-                alt="Joker's Realm Left"
-                fill
-                className="object-contain"
-                priority
-                style={{
-                  objectPosition: "left center",
-                }}
-              />
-            </div>
-          </div>
-
-          {/* Right Half - Shows right 50% of image */}
-          <div
-            ref={jokerRightHalfRef}
-            className="absolute top-0 right-0 bottom-0 origin-right overflow-hidden"
-            style={{
-              width: "50%",
-              height: "100%",
-            }}
-          >
-            <div className="relative w-full h-full" style={{ width: "200%", marginLeft: "-100%" }}>
-              <Image
-                src="/Joker-Slider.svg"
-                alt="Joker's Realm Right"
-                fill
-                className="object-contain"
-                priority
-                style={{
-                  objectPosition: "right center",
-                }}
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Content Sections - Revealed after Joker animation */}
-      <div className="content-after-joker relative z-10">
+      {/* Content Sections */}
+      <div className="relative z-10">
         {/* Section 4: Events */}
         <Events />
         {/* Section 5: Hall of Fame */}

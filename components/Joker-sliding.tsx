@@ -26,40 +26,68 @@ export default function JokerSliding({
     if (!autoPlay) return;
 
     const ctx = gsap.context(() => {
+      // Initial state - both halves together (overlapping at center)
+      gsap.set([leftHalfRef.current, rightHalfRef.current], {
+        x: 0,
+        opacity: 0,
+        scale: 1.05,
+        force3D: true, // Enable GPU acceleration
+      });
+
+      // Initial fade-in animation with smooth ease
+      const initialFade = gsap.timeline({
+        defaults: { ease: "expo.out", force3D: true },
+      });
+      initialFade.to([leftHalfRef.current, rightHalfRef.current], {
+        opacity: 1,
+        scale: 1,
+        duration: 0.8,
+      });
+
+      // Main split animation timeline
       const timeline = gsap.timeline({
+        delay: delay + 1.0, // Slightly longer wait for smoother transition
+        defaults: { ease: "expo.inOut", force3D: true },
         onComplete: () => {
           setIsAnimating(false);
-          onComplete?.();
+          // Smooth fade out with better timing
+          gsap.delayedCall(0.3, () => {
+            if (containerRef.current) {
+              gsap.to(containerRef.current, {
+                opacity: 0,
+                duration: 0.5,
+                ease: "expo.out",
+                force3D: true,
+                onComplete: () => {
+                  onComplete?.();
+                },
+              });
+            } else {
+              onComplete?.();
+            }
+          });
         },
       });
 
-      // Initial state - both halves together
-      gsap.set([leftHalfRef.current, rightHalfRef.current], {
-        clipPath: "inset(0 0% 0 0%)",
-        x: 0,
-      });
-
-      // Break animation - split in half and slide outward
+      // Break animation - split in half (separate outward) simultaneously with smooth easing
       timeline
         .to(
           leftHalfRef.current,
           {
-            clipPath: "inset(0 50% 0 0%)",
-            x: "-100%",
-            duration: 1.2,
-            ease: "power3.inOut",
+            x: "-50%",
+            duration: 1.8,
+            ease: "expo.inOut",
           },
-          delay
+          0
         )
         .to(
           rightHalfRef.current,
           {
-            clipPath: "inset(0 0% 0 50%)",
-            x: "100%",
-            duration: 1.2,
-            ease: "power3.inOut",
+            x: "50%",
+            duration: 1.8,
+            ease: "expo.inOut",
           },
-          delay
+          0
         );
     }, containerRef);
 
@@ -71,10 +99,37 @@ export default function JokerSliding({
     setIsAnimating(true);
 
     const ctx = gsap.context(() => {
+      // Initial fade-in with smooth easing
+      gsap.to([leftHalfRef.current, rightHalfRef.current], {
+        opacity: 1,
+        scale: 1,
+        duration: 0.8,
+        ease: "expo.out",
+        force3D: true,
+      });
+
+      // Main split animation timeline
       const timeline = gsap.timeline({
+        delay: 1.0,
+        defaults: { ease: "expo.inOut", force3D: true },
         onComplete: () => {
           setIsAnimating(false);
-          onComplete?.();
+          // Smooth fade out
+          gsap.delayedCall(0.3, () => {
+            if (containerRef.current) {
+              gsap.to(containerRef.current, {
+                opacity: 0,
+                duration: 0.5,
+                ease: "expo.out",
+                force3D: true,
+                onComplete: () => {
+                  onComplete?.();
+                },
+              });
+            } else {
+              onComplete?.();
+            }
+          });
         },
       });
 
@@ -82,20 +137,18 @@ export default function JokerSliding({
         .to(
           leftHalfRef.current,
           {
-            clipPath: "inset(0 50% 0 0%)",
-            x: "-100%",
-            duration: 1.2,
-            ease: "power3.inOut",
+            x: "-50%",
+            duration: 1.8,
+            ease: "expo.inOut",
           },
           0
         )
         .to(
           rightHalfRef.current,
           {
-            clipPath: "inset(0 0% 0 50%)",
-            x: "100%",
-            duration: 1.2,
-            ease: "power3.inOut",
+            x: "50%",
+            duration: 1.8,
+            ease: "expo.inOut",
           },
           0
         );
@@ -107,21 +160,30 @@ export default function JokerSliding({
   return (
     <div
       ref={containerRef}
-      className={`relative w-full h-full overflow-hidden ${className}`}
+      className={`absolute inset-0 w-full h-full overflow-visible ${className}`}
+      style={{
+        opacity: 1,
+      }}
     >
-      {/* Left Half */}
+      {/* Left Half - Background and Image */}
       <div
         ref={leftHalfRef}
-        className="absolute inset-0 origin-left"
+        className="absolute top-0 bottom-0 origin-left overflow-hidden"
         style={{
-          clipPath: "inset(0 0% 0 0%)",
+          width: "50%",
+          height: "100%",
+          left: 0,
+          opacity: 0,
+          willChange: "transform",
         }}
       >
+        {/* Black background that moves with the half */}
+        <div className="absolute inset-0 bg-black" />
         <Image
           src="/Joker-Slider.svg"
           alt="Joker's Realm"
           fill
-          className="object-contain"
+          className="object-cover relative z-10"
           priority
           style={{
             objectPosition: "left center",
@@ -129,19 +191,25 @@ export default function JokerSliding({
         />
       </div>
 
-      {/* Right Half */}
+      {/* Right Half - Background and Image */}
       <div
         ref={rightHalfRef}
-        className="absolute inset-0 origin-right"
+        className="absolute top-0 bottom-0 origin-right overflow-hidden"
         style={{
-          clipPath: "inset(0 0% 0 0%)",
+          width: "50%",
+          height: "100%",
+          right: 0,
+          opacity: 0,
+          willChange: "transform",
         }}
       >
+        {/* Black background that moves with the half */}
+        <div className="absolute inset-0 bg-black" />
         <Image
           src="/Joker-Slider.svg"
           alt="Joker's Realm"
           fill
-          className="object-contain"
+          className="object-cover relative z-10"
           priority
           style={{
             objectPosition: "right center",
