@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+// import HomeMainSection from "@/app/home/page";
 import Synapse from "@/app/synapse/page";
 import SynapseLoading from "@/components/Synapse-Loading";
 
@@ -33,6 +34,10 @@ export default function Home() {
           </div>
         )}
       </main>
+
+      {/* Just use this single section as Home Page 
+      <HomeMainSection /> 
+      */}
     </>
   );
 }
