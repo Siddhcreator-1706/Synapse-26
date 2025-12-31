@@ -56,7 +56,7 @@ export default function LoginPage() {
             <div>
               <input
                 type="email"
-                placeholder="E.g. rsharma@gmail.com"
+                placeholder="E.g. username@gmail.com"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 className="w-full px-4 py-3.5 bg-transparent border border-white rounded-md text-white placeholder:text-white/40 focus:outline-none focus:border-white transition-all text-base"

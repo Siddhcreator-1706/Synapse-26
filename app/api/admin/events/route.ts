@@ -1,21 +1,43 @@
+
+
+// eg api call
+// {
+//   "event_name": "Hackathon 2025",
+//   "category_id": 1,
+//   "event_date": "2025-12-20T09:00:00.000Z",
+//   "is_registration_open": true,
+//   "is_dau_free": true,  
+//   "fees": [
+//     { 
+//       "type": "solo", 
+//       "price": 100, 
+//       "min": 1, 
+//       "max": 1 
+//     },
+//     { 
+//       "type": "duet", 
+//       "price": 200, 
+//       "min": 2, 
+//       "max": 2 
+//     }
+//   ]
+// }
+
+
 import { createClient } from '@/utils/supabase/server'
 import { NextResponse } from 'next/server'
 
 async function checkAdmin(supabase: any) {
-
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return false
 
-  // Replace with your actual admin emails
   const allowedAdmins = ['admin@yourcollege.edu', 'organizer@gmail.com']
-  
   if (user.email && allowedAdmins.includes(user.email)) {
     return true
   }
   return false
 }
 
-// not gated as it's for public event listing
 export async function GET() {
   const supabase = await createClient()
 
@@ -23,7 +45,7 @@ export async function GET() {
     .from('event')
     .select(`
       *,
-      event_category ( category_id, category_name ),
+      event_category ( category_name ),
       event_fee (
         fee ( fee_id, participation_type, price, min_members, max_members )
       )
@@ -40,7 +62,6 @@ export async function GET() {
 export async function POST(request: Request) {
   const supabase = await createClient()
 
-  // gated endpoint 
   if (!await checkAdmin(supabase)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
   }
@@ -48,41 +69,60 @@ export async function POST(request: Request) {
   try {
     const body = await request.json()
 
-    if (!body.event_name || !body.event_date || !body.category_id) {
-      return NextResponse.json({ error: 'Missing Name, Date, or Category' }, { status: 400 })
-    }
-
-    // Image Handling Note:
-    // this API expects a 'string' URL.
-    // If using Cloudinary: Frontend sends "https://res.cloudinary.com/..."
-    // If using Public Folder: Frontend sends "/assets/events/my-image.jpg"
-    // We just save whatever string is passed.
-    
-    const { data, error } = await supabase
+    // A. Create the Event
+    const { data: eventData, error: eventError } = await supabase
       .from('event')
       .insert({
         event_name: body.event_name,
-        category_id: Number(body.category_id), // Ensure it's a number
-        event_date: body.event_date,           // ISO Date String
-        event_picture: body.event_picture || null, 
+        category_id: body.category_id,
+        event_date: body.event_date,
+        event_picture: body.event_picture || null,
         rulebook: body.rulebook || null,
         description: body.description || null,
-        is_registration_open: true             // Default to Open
+        is_registration_open: body.is_registration_open ?? true,
+        is_dau_free: body.is_dau_free ?? false // <--- NEW FIELD
       })
       .select()
       .single()
 
-    if (error) throw error
+    if (eventError) throw eventError
 
-    return NextResponse.json({ success: true, event: data }, { status: 201 })
+    if (body.fees && Array.isArray(body.fees) && body.fees.length > 0) {
+      
+      const feeInserts = body.fees.map((f: any) => ({
+        participation_type: f.type, 
+        price: Number(f.price),
+        min_members: Number(f.min || 1),
+        max_members: Number(f.max || 1)
+      }))
+
+      const { data: feeData, error: feeError } = await supabase
+        .from('fee')
+        .insert(feeInserts)
+        .select()
+
+      if (feeError) throw feeError
+
+      const eventFeeLinks = feeData.map((f: any) => ({
+        event_id: eventData.event_id,
+        fee_id: f.fee_id
+      }))
+
+      const { error: linkError } = await supabase
+        .from('event_fee')
+        .insert(eventFeeLinks)
+
+      if (linkError) throw linkError
+    }
+
+    return NextResponse.json({ success: true, event: eventData }, { status: 201 })
 
   } catch (error: any) {
-    console.error('Create Event Error:', error)
+    console.error('Create Error:', error)
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }
 
-// update event details or toggle registration
 export async function PUT(request: Request) {
   const supabase = await createClient()
 
@@ -92,31 +132,67 @@ export async function PUT(request: Request) {
 
   try {
     const body = await request.json()
-    const { event_id, ...updates } = body
+    const { event_id, fees, ...updates } = body
 
     if (!event_id) {
       return NextResponse.json({ error: 'Event ID required' }, { status: 400 })
     }
 
-    // This handles the toggle switch (is_registration_open)
-    // AND full edits (name, date, etc.) depending on what you send.
-    const { data, error } = await supabase
+    const { data: eventData, error: eventError } = await supabase
       .from('event')
       .update(updates)
       .eq('event_id', Number(event_id))
       .select()
       .single()
 
-    if (error) throw error
+    if (eventError) throw eventError
 
-    return NextResponse.json({ success: true, event: data })
+    if (fees && Array.isArray(fees)) {
+      
+      // 1. Find old fees linked to this event
+      const { data: oldLinks } = await supabase
+        .from('event_fee')
+        .select('fee_id')
+        .eq('event_id', Number(event_id))
+
+      const oldFeeIds = oldLinks?.map((link: any) => link.fee_id) || []
+
+      if (oldFeeIds.length > 0) {
+        await supabase.from('fee').delete().in('fee_id', oldFeeIds)
+      }
+
+      // 3. Create NEW fees from the form data
+      if (fees.length > 0) {
+        const feeInserts = fees.map((f: any) => ({
+          participation_type: f.type,
+          price: Number(f.price),
+          min_members: Number(f.min || 1),
+          max_members: Number(f.max || 1)
+        }))
+
+        const { data: newFees, error: newFeeError } = await supabase
+          .from('fee')
+          .insert(feeInserts)
+          .select()
+
+        if (newFeeError) throw newFeeError
+
+        const newLinks = newFees.map((f: any) => ({
+          event_id: event_id,
+          fee_id: f.fee_id
+        }))
+
+        await supabase.from('event_fee').insert(newLinks)
+      }
+    }
+
+    return NextResponse.json({ success: true, event: eventData })
 
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }
 
-// remove event
 export async function DELETE(request: Request) {
   const supabase = await createClient()
 
@@ -125,7 +201,6 @@ export async function DELETE(request: Request) {
   }
 
   try {
-    // Get ID from URL query params (e.g. ?id=123)
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
 

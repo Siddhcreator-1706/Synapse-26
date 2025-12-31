@@ -86,8 +86,6 @@ export default function RegisterPage() {
                 <div className="relative w-32">
                   <select className="w-full h-12 px-3 bg-transparent border border-white/50 rounded-md text-white text-sm focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white appearance-none font-card">
                     <option value="91" className="bg-black">INR (+91)</option>
-                    <option value="1" className="bg-black">USA (+1)</option>
-                    <option value="44" className="bg-black">UK (+44)</option>
                   </select>
                   <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/50 pointer-events-none" />
                 </div>
