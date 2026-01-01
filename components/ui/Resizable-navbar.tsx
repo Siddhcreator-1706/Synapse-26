@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { IconMenu2, IconX } from "@tabler/icons-react";
+import { IconMenu3, IconX } from "@tabler/icons-react";
 import {
   motion,
   AnimatePresence,
@@ -49,6 +49,12 @@ interface MobileNavMenuProps {
   className?: string;
   isOpen: boolean;
   onClose: () => void;
+}
+
+interface AnimatedMenuItemProps {
+  name: string;
+  link: string;
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
 export const Navbar = ({
@@ -115,12 +121,13 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
       )}
     >
       {items.map((item, idx) => (
-        <a
+        <Link
           onMouseEnter={() => setHovered(idx)}
           onClick={onItemClick}
           className="relative px-4 py-2 text-white/80 hover:text-white transition-colors duration-200"
           key={`link-${idx}`}
           href={item.link}
+          scroll={false}
         >
           {hovered === idx && (
             <motion.div
@@ -129,7 +136,7 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
             />
           )}
           <span className="relative z-20">{item.name}</span>
-        </a>
+        </Link>
       ))}
     </motion.div>
   );
@@ -139,14 +146,12 @@ export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
   return (
     <motion.div
       animate={{
-        backdropFilter: visible ? "blur(12px)" : "blur(4px)",
         boxShadow: visible
           ? "0 4px 30px rgba(235, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.1)"
           : "none",
-        width: visible ? "95%" : "100%",
+        width: visible ? "100%" : "100%",
         paddingRight: visible ? "12px" : "0px",
         paddingLeft: visible ? "12px" : "0px",
-        borderRadius: visible ? "8px" : "2rem",
         y: visible ? 20 : 0,
       }}
       transition={{
@@ -155,13 +160,78 @@ export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
         damping: 50,
       }}
       className={cn(
-        "relative z-50 mx-auto flex w-full max-w-[calc(100vw-2rem)] flex-col items-center justify-between bg-black/40 px-4 py-3 border border-white/10",
-        visible && "bg-black/80",
+        "relative z-50 mx-auto flex w-full flex-col items-center justify-between bg-black px-4 py-3 ",
+        visible,
         className,
       )}
     >
       {children}
     </motion.div>
+  );
+};
+
+export const MobileAnimatedMenuItem = ({
+  name,
+  link,
+  onClick,
+}: AnimatedMenuItemProps) => {
+  return (
+    <Link
+      href={link}
+      onClick={(e) => onClick?.(e)}
+      className="
+        group w-full
+        grid grid-cols-[1fr_auto] items-center
+        cursor-pointer select-none
+        text-white
+      "
+    >
+      {/* TEXT */}
+      <div className="relative overflow-hidden h-[clamp(32px,7vw,64px)]">
+        {/* DEFAULT */}
+        <span
+          className="
+            absolute inset-0
+            translate-y-0
+            transition-transform duration-500 ease-out
+            group-hover:-translate-y-full
+            text-[clamp(18px,4.5vw,42px)]
+            leading-[clamp(32px,7vw,64px)]
+            group-hover:text-[#EB0000]
+          "
+        >
+          {name}
+        </span>
+
+        {/* HOVER */}
+        <span
+          className="
+            absolute inset-0
+            translate-y-full
+            transition-transform duration-500 ease-out
+            group-hover:translate-y-0
+            text-[clamp(18px,4.5vw,42px)]
+            leading-[clamp(32px,7vw,64px)]
+            group-hover:text-[#EB0000]
+          "
+        >
+          {name}
+        </span>
+      </div>
+
+      {/* ARROW */}
+      <span
+        className="
+          ml-[clamp(8px,1.5vw,16px)]
+          text-[clamp(20px,5vw,48px)]
+          transition-all duration-300 ease-out
+          group-hover:translate-x-1.5
+          group-hover:text-[#EB0000]
+        "
+      >
+        ↗
+      </span>
+    </Link>
   );
 };
 
@@ -172,7 +242,7 @@ export const MobileNavHeader = ({
   return (
     <div
       className={cn(
-        "flex w-full flex-row items-center justify-between",
+        "flex w-full px-5 flex-row items-center justify-between",
         className,
       )}
     >
@@ -195,7 +265,7 @@ export const MobileNavMenu = ({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           className={cn(
-            "absolute inset-x-0 top-16 z-50 flex w-full flex-col items-start justify-start gap-4 rounded-lg bg-black/95 backdrop-blur-xl px-4 py-8 border border-white/10 shadow-[0_4px_30px_rgba(235,0,0,0.15)]",
+            "absolute inset-x-0 top-16 z-50 flex w-[95%] flex-col left-1/2 -translate-x-1/2 items-start justify-start gap-4 rounded-lg bg-black/95 px-4 py-8 border border-white/10 shadow-[0_4px_30px_rgba(235,0,0,0.15)]",
             className,
           )}
         >
@@ -216,7 +286,7 @@ export const MobileNavToggle = ({
   return isOpen ? (
     <IconX className="text-white cursor-pointer hover:text-[#EB0000] transition-colors" onClick={onClick} />
   ) : (
-    <IconMenu2 className="text-white cursor-pointer hover:text-[#EB0000] transition-colors" onClick={onClick} />
+    <IconMenu3 size={32} className="text-white cursor-pointer hover:text-[#EB0000] transition-colors" onClick={onClick} />
   );
 };
 

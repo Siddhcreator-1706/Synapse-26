@@ -8,7 +8,9 @@ import JokerSection from "@/components/Home-JokerSection";
 import ArtistsSection from "@/components/Artists";
 import HallOfFame from "@/components/Home-HallOfFame";
 import Footer from "@/components/ui/Footer";
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SmoothScroller } from "@/components/ui/SmoothScroller";
+
 
 export default function HomeSection() {
   const [entered, setEntered] = useState(false);
@@ -21,6 +23,7 @@ export default function HomeSection() {
       });
     }
   }, [entered]);
+
   return (
     <SmoothScroller>
       <main className="flex flex-col min-h-screen">

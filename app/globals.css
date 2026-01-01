@@ -79,6 +79,7 @@
   --font-mono: "Geist Mono", "Geist Mono Fallback";
   --font-card: "CardCharacter", sans-serif;
   --font-joker: "Joker", sans-serif;
+  --font-poppins: "Poppins", system-ui, sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);

@@ -12,6 +12,7 @@ module.exports = {
       fontFamily: {
         card: ["var(--font-card)"],
         joker: ["var(--font-joker)"],
+        poppins: ["var(--font-poppins)"],
       },
     },
   },

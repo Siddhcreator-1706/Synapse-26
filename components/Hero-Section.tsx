@@ -1,21 +1,21 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback, useLayoutEffect } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { CountdownTimer } from './CountdownTimer';
 import {
     Navbar,
-    NavBody,
-    NavItems,
     MobileNav,
     MobileNavHeader,
     MobileNavMenu,
     MobileNavToggle,
     NavbarLogo,
     NavbarButton,
+    MobileAnimatedMenuItem
 } from "@/components/ui/Resizable-navbar";
+import Link from "next/link"
 import { Layout } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -24,8 +24,8 @@ gsap.registerPlugin(ScrollTrigger);
 const navItems = [
     { name: "Home", link: "/" },
     { name: "Events", link: "/events" },
-    { name: "Contact", link: "/contact" },
-    { name: "Terms And Conditions", link: "/termsandconditions" },
+    { name: "Contact Us", link: "#contact", isContact: true },
+    { name: "Terms And Conditions", link: "/terms-and-conditions" },
 ];
 
 const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -38,8 +38,6 @@ type HeroSectionProps = {
 };
 
 export default function HeroSection({ onEnter }: HeroSectionProps) {
-
-    const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
     const [showEnter, setShowEnter] = useState(false);
     const [loadingProgress, setLoadingProgress] = useState(0);
@@ -89,7 +87,18 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
         "/Group_9.png",
 
     ];
+    const handleContactClick = (e: any) => {
+        e.preventDefault();
+        setMobileMenuOpen(false);
 
+        const footer = document.getElementById("contact");
+        if (!footer) return;
+
+        footer.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+        });
+    };
 
     const updateProgressText = useCallback((progress: number) => {
         if (progressTextRef.current) {
@@ -546,7 +555,7 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
             ) : (
                 <>
                     <Navbar visible={showNavbar}>
-                        <MobileNav visible={showNavbar}>
+                        <MobileNav>
                             <MobileNavHeader>
                                 <NavbarLogo />
                                 <MobileNavToggle
@@ -554,27 +563,25 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
                                     onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                                 />
                             </MobileNavHeader>
+
                             <MobileNavMenu
                                 isOpen={mobileMenuOpen}
                                 onClose={() => setMobileMenuOpen(false)}
                             >
                                 {navItems.map((item, idx) => (
-                                    <a
+                                    <MobileAnimatedMenuItem
                                         key={idx}
-                                        href={item.link}
-                                        onClick={() => setMobileMenuOpen(false)}
-                                        className="w-full text-white/80 hover:text-[#EB0000] transition-colors duration-200 py-2"
-                                    >
-                                        {item.name}
-                                    </a>
+                                        name={item.name}
+                                        link={item.link}
+                                        onClick={(e) => {
+                                            if (item.isContact) {
+                                                handleContactClick(e);
+                                            } else {
+                                                setMobileMenuOpen(false);
+                                            }
+                                        }}
+                                    />
                                 ))}
-                                <NavbarButton
-                                    href="/register"
-                                    variant="gradient"
-                                    className="w-full mt-4"
-                                >
-                                    Register
-                                </NavbarButton>
                             </MobileNavMenu>
                         </MobileNav>
                     </Navbar>

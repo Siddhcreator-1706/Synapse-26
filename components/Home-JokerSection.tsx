@@ -142,7 +142,7 @@ export default function JokerSection() {
                 scrollTrigger: {
                     trigger: jokerSectionRef.current,
                     start: "top top",
-                    end: "bottom top",
+                    end: "+=400%",
                     scrub: 1,
                     pin: true,
                     pinSpacing: true,
@@ -181,24 +181,24 @@ export default function JokerSection() {
 
             jokerTl.to(leftTitle, {
                 y: -40,
-                duration: 1,
+                duration: 2,
                 ease: "power2.out"
             }, ">")
                 .to(rightTitle, {
                     y: 40,
-                    duration: 1,
+                    duration: 2,
                     ease: "power2.out"
                 }, "<");
 
             jokerTl.to(leftDoor, {
                 x: "-100%",
-                duration: 2.5,
-                ease: "power2.inOut"
+                duration: 4,
+                ease: "expo.in"
             }, "<")
                 .to(rightDoor, {
                     x: "100%",
-                    duration: 2.5,
-                    ease: "power2.inOut"
+                    duration: 4,
+                    ease: "expo.in"
                 }, "<");
 
             const getCardX = (i: number) => {
@@ -247,10 +247,14 @@ export default function JokerSection() {
 
             jokerTl.to(shuffledCards, {
                 rotateY: 180,
-                duration: 1,
+                duration: 0.5,
                 stagger: 2,
                 ease: "power1.inOut"
-            }, "+=0.5");
+            }, "+=0.3")
+                .to(shuffledCards, {
+                    duration: 1,
+                    ease: "none",
+                });
 
             setupCardHoverAnimations();
 
