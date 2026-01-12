@@ -552,7 +552,7 @@ function OtpBox({ goLogin }: { goLogin: () => void }) {
               onChange={(e) => handleChange(index, e.target.value)}
               onKeyDown={(e) => handleKeyDown(index, e)}
               onPaste={handlePaste}
-              className="h-[95px] w-[68px] rounded border border-white/20 bg-transparent text-center font-card text-3xl text-white transition-colors focus:border-white focus:outline-none"
+              className="h-[95px] w-[68px] rounded border border-white/70 bg-transparent text-center font-card text-3xl text-white transition-colors focus:border-white focus:outline-none"
             />
           ))}
         </div>
