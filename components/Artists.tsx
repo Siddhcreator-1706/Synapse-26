@@ -122,11 +122,18 @@ export default function ArtistsSection() {
                 zIndex = 10;
                 opacity = 1;
             } else {
-                element.classList.remove("center");
+                element.classList.remove("center"); 
 
-                if (absOffset > spacing) {
-                    opacity = Math.max(0.3, 1 - (absOffset - spacing) / (spacing * 2));
-                    scale = 0.8;
+                if (window.innerWidth < 360) {
+                    // Force invisible on mobile to avoid overlap
+                    opacity = 0;
+                    scale = 0.5;
+                } else {
+                    // Desktop Fade Logic
+                    if (absOffset > spacing) {
+                        opacity = Math.max(0.3, 1 - (absOffset - spacing) / (spacing * 2));
+                        scale = 0.8;
+                    }
                 }
 
                 zIndex = 5 - Math.abs(diff);
@@ -236,11 +243,11 @@ export default function ArtistsSection() {
 
     return (
         <div
-            className="artists-section relative bg-black h-screen"
+            className="artists-section relative bg-black h-[115vh]"
             id="artistsSection"
             ref={artistSectionRef}
         >
-            <div className="artists-content relative top-[-1.2px] right-[-1.6px] h-full flex flex-col">
+            <div className="artists-content relative top-[-1.6px] right-[-1px] h-full flex flex-col">
                 <svg
                     id="artistPath"
                     width="100%"
@@ -267,12 +274,12 @@ export default function ArtistsSection() {
                     ARTISTS
                 </h1>
 
-                <div className="carousel relative flex-1 overflow-hidden flex items-center justify-center">
+                <div className="carousel relative flex-1 overflow-hidden flex items-center justify-center pb-[5vh]">
                     <div className="black-line absolute left-0 right-0 top-[45%] h-1 bg-white -translate-y-1/2 z-0"></div>
 
                     <div
                         id="artistPathDot"
-                        className="fixed w-22.5 h-22.5 bg-[#ff0000] rounded-full blur-[20px] pointer-events-none z-5 opacity-0 -translate-x-1/2 -translate-y-1/2"
+                        className="fixed  w-14 h-14 md:w-22.5 md:h-22.5 bg-[#ff0000] rounded-full blur-[20px] pointer-events-none z-5 opacity-0 -translate-x-1/2 -translate-y-1/2"
                         ref={artistDotRef}
                     ></div>
 
@@ -304,12 +311,12 @@ export default function ArtistsSection() {
                                         style={{
                                             width:
                                                 i === currentIndex
-                                                    ? "clamp(260px, 42vw, 520px)"
-                                                    : "clamp(110px, 18vw, 230px)",
+                                                    ? "clamp(180px, 42vw, 520px)"
+                                                    : "clamp(90px, 18vw, 230px)",
                                             height:
                                                 i === currentIndex
-                                                    ? "clamp(200px, 30vw, 420px)"
-                                                    : "clamp(85px, 20vw, 230px)",
+                                                    ? "clamp(120px, 30vw, 420px)"
+                                                    : "clamp(65px, 20vw, 230px)",
                                         }}
                                         sizes="(max-width: 768px) 80vw, 520px"
                                     />
@@ -317,10 +324,10 @@ export default function ArtistsSection() {
 
                                 {i === currentIndex && (
                                     <div className="mt-4 border-t-2 border-b-2 border-white py-2 px-6 text-center text-white">
-                                        <h2 className="text-2xl md:text-5xl font-jqka uppercase">
+                                        <h2 className="text-2xl md:text-3xl font-jqka uppercase">
                                             {artist.name}
                                         </h2>
-                                        <p className="text-sm font-jqka md:text-lg">
+                                        <p className="text-base font-jqka md:text-xl">
                                             {artist.date}
                                         </p>
                                     </div>
@@ -340,9 +347,9 @@ export default function ArtistsSection() {
   "
                         onClick={prevArtist}
                         style={{
-                            width: "clamp(36px, 6vw, 62px)",
-                            height: "clamp(32px, 5vw, 54px)",
-                            right: "calc(50% + clamp(260px, 42vw, 520px)/2)",
+                            width: "clamp(24px, 6vw, 62px)",
+                            height: "clamp(22px, 5vw, 54px)",
+                            right: "calc(50% + clamp(180px, 42vw, 520px)/2)",
                         }}
                     >
                         <div
@@ -353,8 +360,8 @@ export default function ArtistsSection() {
       rotate-270
     "
                             style={{
-                                width: "clamp(18px, 2.5vw, 33px)",
-                                height: "clamp(12px, 1.8vw, 22px)",
+                                width: "clamp(12px, 2.5vw, 33px)",
+                                height: "clamp(8px, 1.8vw, 22px)",
                                 clipPath: "polygon(50% 0%, 0% 100%, 100% 100%)",
                             }}
                         />
@@ -368,9 +375,9 @@ export default function ArtistsSection() {
              flex items-center justify-center transition z-20 cursor-pointer"
                         onClick={nextArtist}
                         style={{
-                            width: 'clamp(36px, 6vw, 62px)',
-                            height: 'clamp(32px, 5vw, 54px)',
-                            left: 'calc(clamp(260px, 42vw, 520px)/2 + 50%)'
+                            width: "clamp(24px, 6vw, 62px)",
+                            height: "clamp(22px, 5vw, 54px)",
+                            left: 'calc(clamp(180px, 42vw, 520px)/2 + 50%)'
                         }}
                     >
                         <div
@@ -378,8 +385,8 @@ export default function ArtistsSection() {
       group-hover:bg-red-600 -rotate-270
       transition-colors duration-400"
                             style={{
-                                width: 'clamp(18px, 2.5vw, 33px)',
-                                height: 'clamp(12px, 1.8vw, 22px)',
+                                width: "clamp(12px, 2.5vw, 33px)",
+                                height: "clamp(8px, 1.8vw, 22px)",
                                 clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
                             }}
                         />

@@ -59,8 +59,8 @@ const styles = {
 export default function Terms() {
 
     return (
-        <div className="relative w-screen min-h-screen overflow-x-hidden text-white">
-            <Navbar visible ={true}>
+        <div className="relative w-screen min-h-screen overflow-x-hidden  text-white">
+            <Navbar visible={true}>
                 <NavigationPanel />
             </Navbar>
 

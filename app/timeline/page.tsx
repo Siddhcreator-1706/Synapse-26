@@ -9,9 +9,10 @@ import Footer from '@/components/ui/Footer'
 export default function page() {
   return (
     <div>
-      <Navbar visible={true}>
-        <NavigationPanel />
-      </Navbar>
+      
+        <Navbar visible={true}><NavigationPanel />
+</Navbar>
+      
       <div className="mt-12.5">
         <Timeline />
       </div>

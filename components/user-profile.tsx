@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { ArrowLeft } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -56,6 +57,7 @@ const hasAccommodation = true
 /* data */
 export default function UserProfile() {
   const ref = useRef<HTMLDivElement>(null)
+  const router = useRouter()
 
   useEffect(() => {
     if (!ref.current) return
@@ -65,100 +67,122 @@ export default function UserProfile() {
       { opacity: 1, y: 0, stagger: 0.05 }
     )
   }, [])
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      router.back()
+    } else {
+      router.push("/") // fallback route
+    }
+  }
 
   return (
-    <div ref={ref} className="min-h-screen bg-background px-4 py-12">
+    <div ref={ref} className="min-h-screen bg-background px-4 py-6 md:px-8 md:py-12">
       {/* HEADER */}
-      <div className="max-w-7xl mx-auto mb-10">
-        <button className="group relative -left-4 inline-flex items-center justify-center text-muted-foreground hover:text-foreground transition-all-ml-5">
-          <ArrowLeft className="w-8 h-8" />
+      <div className="max-w-7xl mx-auto mb-6 md:mb-10">
+        <button
+          onClick={handleBack}
+          className="group relative inline-flex items-center justify-center text-muted-foreground hover:text-foreground transition-all"
+          aria-label="Go Back"
+        >
+          <ArrowLeft className="cursor-pointer w-6 h-6 md:w-8 md:h-8" />
         </button>
       </div>
 
       {/* MAIN GRID */}
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-        {/* left column */}
-        <div>
-          <h2 className="text-4xl font-bold mb-6">Profile</h2>
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+        {/* LEFT COLUMN: Profile */}
+        <div className="animate flex flex-col gap-6">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold">Profile</h2>
 
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-3 md:space-y-4">
+            {/* Name Row */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
               {[
                 ["First Name", userDetails.firstName],
                 ["Last Name", userDetails.lastName],
               ].map(([label, value]) => (
-                <div key={label} className="animate border border-white p-4 min-h-[72px]">
-                  <p className={`text-xs text-muted-foreground font-roboto`}>{label}</p>
-                  <p className={`text-base font-semibold font-roboto`}>{value}</p>
+                <div key={label} className="border border-white p-3 md:p-4 min-h-[72px] flex flex-col justify-center">
+                  <p className="text-xs text-muted-foreground font-roboto uppercase tracking-wider">{label}</p>
+                  <p className="text-base font-semibold font-roboto truncate">{value}</p>
                 </div>
               ))}
             </div>
 
+            {/* Contact Info Stack */}
             {[
               ["Phone", userDetails.phone],
               ["College", userDetails.university],
               ["Email Address", userDetails.email],
             ].map(([label, value]) => (
-              <div key={label} className="animate border border-white p-4 min-h-[72px]">
-                <p className={`text-xs text-muted-foreground font-roboto`}>{label}</p>
-                <p className={`text-base font-semibold break-all font-roboto`}>{value}</p>
+              <div key={label} className="animate border border-white p-3 md:p-4 min-h-[72px] flex flex-col justify-center">
+                <p className="text-xs text-muted-foreground font-roboto uppercase tracking-wider">{label}</p>
+                <p className="text-base font-semibold break-words font-roboto">{value}</p>
               </div>
             ))}
 
-            <div className="grid grid-cols-2 gap-4">
+            {/* Demographics Row */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
               {[
                 ["Date of Birth", userDetails.dateOfBirth],
                 ["Gender", userDetails.gender],
               ].map(([label, value]) => (
-                <div key={label} className="animate border border-white p-4 min-h-[72px]">
-                  <p className={`text-xs text-muted-foreground font-roboto`}>{label}</p>
-                  <p className={`text-base font-semibold font-roboto`}>{value}</p>
+                <div key={label} className="animate border border-white p-3 md:p-4 min-h-[72px] flex flex-col justify-center">
+                  <p className="text-xs text-muted-foreground font-roboto uppercase tracking-wider">{label}</p>
+                  <p className="text-base font-semibold font-roboto capitalize">{value}</p>
                 </div>
               ))}
             </div>
           </div>
         </div>
 
-        {/* right column */}
-        <div>
+        {/* RIGHT COLUMN: Events & Accom */}
+        <div className="flex flex-col">
           {/* EVENTS */}
-          <h2 className="text-4xl font-bold mb-6">Registered Events</h2>
+          <div className="mb-8 md:mb-10">
+            <h2 className="animate text-2xl md:text-3xl lg:text-4xl font-bold mb-4 md:mb-6">Registered Events</h2>
 
-          <div className="space-y-4 max-h-[265px] overflow-y-auto pr-2 mb-10 thin-scrollbar overscroll-contain">
-            {registeredEvents.map((event) => (
-              <div key={event.id} className="animate border border-white p-4">
-                <div className="flex justify-between gap-4">
-                  <h3 className="font-semibold">{event.name}</h3>
-                  <span
-                    className={`px-3 py-1 rounded-full text-sm ${
-                      event.status === "Registered"
-                        ? "bg-green-500/20 text-green-400"
-                        : "bg-orange-500/20 text-orange-400"
-                    }`}
-                  >
-                    {event.status}
-                  </span>
+            <div className="animate space-y-3 md:space-y-4 max-h-[265px] overflow-y-auto pr-2 thin-scrollbar overscroll-contain">
+              {registeredEvents.length > 0 ? (
+                registeredEvents.map((event) => (
+                  <div key={event.id} className="border border-white p-3 md:p-4 transition-colors hover:bg-white/5">
+                    <div className="flex justify-between items-start gap-3">
+                      <h3 className="font-semibold text-base md:text-lg leading-tight">{event.name}</h3>
+                      <span
+                        className={`px-2 py-0.5 md:px-3 md:py-1 rounded-full text-xs md:text-sm whitespace-nowrap font-medium ${event.status === "Registered"
+                            ? "bg-green-500/20 text-green-400"
+                            : "bg-orange-500/20 text-orange-400"
+                          }`}
+                      >
+                        {event.status}
+                      </span>
+                    </div>
+                    <p className="mt-1 text-xs md:text-sm text-muted-foreground font-roboto">{event.category}</p>
+                  </div>
+                ))
+              ) : (
+                <div className="border border-white/20 border-dashed p-6 text-center text-muted-foreground">
+                  No events registered yet.
                 </div>
-                <p className={`mt-1 text-sm font-roboto`}>{event.category}</p>
-              </div>
-            ))}
+              )}
+            </div>
           </div>
 
           {/* ACCOMMODATION */}
-          <h2 className="text-4xl font-bold mt-10 mb-4">Accommodation</h2>
+          <div className="mt-auto">
+            <h2 className="animate text-2xl md:text-3xl lg:text-4xl font-bold mb-4">Accommodation</h2>
 
-          <div className="border border-white p-4 min-h-[72px]">
-            <div className="flex justify-between items-center">
-              <p className={`text-base font-semibold font-roboto`}>2 days accommodation</p>
-              <span
-                className={`px-3 py-1 rounded-full text-sm ${
-                  hasAccommodation
-                    ? "bg-green-500/20 text-green-400"
-                    : "bg-orange-500/20 text-orange-400"
-                }`}
-              >
-                {hasAccommodation ? "Registered" : "Unregistered"}
-              </span>
+            <div className="animate border border-white p-3 md:p-4 min-h-[72px] flex items-center">
+              <div className="flex justify-between items-center w-full gap-4">
+                <p className="text-sm md:text-base font-semibold font-roboto">2 Days Accommodation</p>
+                <span
+                  className={`px-3 py-1 rounded-full text-xs md:text-sm font-medium ${hasAccommodation
+                      ? "bg-green-500/20 text-green-400"
+                      : "bg-orange-500/20 text-orange-400"
+                    }`}
+                >
+                  {hasAccommodation ? "Registered" : "Unregistered"}
+                </span>
+              </div>
             </div>
           </div>
         </div>

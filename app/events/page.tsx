@@ -49,9 +49,10 @@ export default function EventsPage() {
 
     return (
         <>
-            <Navbar visible>
+            <Navbar visible={true}>
                 <NavigationPanel />
             </Navbar>
+
 
             <main className="bg-black text-white overflow-x-hidden">
                 <section className="relative h-[45vh] w-full">

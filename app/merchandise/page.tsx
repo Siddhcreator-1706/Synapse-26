@@ -38,9 +38,10 @@ export default function MerchPage() {
 
       {/* HERO */}
       <div className="relative w-full h-[clamp(320px,55vh,520px)] overflow-hidden">
-        <Navbar visible={true}>
-          <NavigationPanel />
-        </Navbar>
+        
+          <Navbar visible={true}><NavigationPanel />
+</Navbar>
+        
 
         <img
           src="/images_merch/merch-her.png"
@@ -109,7 +110,7 @@ export default function MerchPage() {
               <p
                 className="
         text-white/90
-        text-[clamp(12px,3vw,16px)]
+         text-lg sm:text-xl
         leading-snug
         w-[70%]
         font-jqka
@@ -122,7 +123,7 @@ export default function MerchPage() {
               <p
                 className="
         text-white
-        text-[clamp(13px,3.5vw,20px)]
+        text-lg sm:text-xl
         font-jqka
       "
               >
@@ -135,11 +136,11 @@ export default function MerchPage() {
               <button
                 className="
         mt-4
-        w-full
+        w-full cursor-pointer
         border border-white
         py-2.5 md:py-3
         rounded-sm
-        text-[clamp(13px,3vw,16px)]
+        text-xl sm:text-2xl
         tracking-wide
         font-jqka
         hover:bg-white hover:text-black

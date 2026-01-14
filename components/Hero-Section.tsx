@@ -5,23 +5,24 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { CountdownTimer } from './CountdownTimer';
 import {
-    Navbar,
     NavbarButton
 } from "@/components/ui/Resizable-navbar";
-import NavigationPanel from '@/components/ui/NavigationPanel';
 import Svg from "@/components/Svg";
+import { ChevronDown } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const FIRST_PHASE_TIME = 4000;
+const FIRST_PHASE_TIME = 1000;
 
 type HeroSectionProps = {
     onEnter: () => void;
+    showNavbar: boolean,
+    setShowNavbar: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 let check = false;
 
-export default function HeroSection({ onEnter }: HeroSectionProps) {
+export default function HeroSection({ onEnter, setShowNavbar, showNavbar }: HeroSectionProps) {
     const INTRO_KEY = "synapse_has_entered";
 
     const [isLoading, setIsLoading] = useState(() => {
@@ -31,7 +32,6 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
 
     const [showEnter, setShowEnter] = useState(false);
     const [loadingProgress, setLoadingProgress] = useState(0);
-    const [showNavbar, setShowNavbar] = useState(false);
     const [part3Active, setPart3Active] = useState(false);
 
     const hasRunMaskRef = useRef(false);
@@ -53,6 +53,7 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
     const titleRef = useRef<HTMLHeadingElement>(null)
     const scrollTrackRef = useRef<HTMLDivElement>(null);
     const scrollFillRef = useRef<HTMLDivElement>(null);
+    const scrollHintHomeRef = useRef<HTMLDivElement>(null);
     const prevOverflow = useRef<{ html: string; body: string }>({
         html: "",
         body: "",
@@ -82,8 +83,8 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
     const loadSVG = useCallback(async () => {
         const svg = svgContainerRef.current?.querySelector("svg");
         if (svg) {
-            svg.style.width = "100%";
             svg.style.height = "100%";
+            if(window.innerWidth > 450){svg.style.width = "100%";}
             const pathsArray = Array.from(svg.querySelectorAll("path")) as SVGPathElement[];
             assetsRef.current.paths = pathsArray;
 
@@ -284,6 +285,8 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
         if (!screenContainerRef.current || !part3_2Ref.current || !flipCardRef.current ||
             !part3Ref.current || !titleRef.current) return;
 
+        const isMobile = window.innerWidth < 500;
+
         gsap.set(screenContainerRef.current, {
             transformStyle: "preserve-3d",
             backfaceVisibility: "hidden"
@@ -386,6 +389,16 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
                 "part3Reveal+=0.4"
             )
             .from(
+                "#part3 .scroll-hint-home",
+                {
+                    y: -20,
+                    opacity: 0,
+                    ease: "power3.out",
+                    stagger: 0.15
+                },
+                "part3Reveal+=0.4"
+            )
+            .from(
                 "#part3 .title-wrapper",
                 {
                     opacity: 0,
@@ -416,11 +429,19 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
                 "part3Hide+=0.2"
             )
             .to(
-                [
-                    "#part3 .countdown"
-                ],
+                "#part3 .countdown",
                 {
                     x: -100,
+                    opacity: 0,
+                    ease: "power3.out",
+                    stagger: 0.15
+                },
+                "part3Hide+=0.2"
+            )
+            .to(
+                "#part3 .scroll-hint-home",
+                {
+                    y: -20,
                     opacity: 0,
                     ease: "power3.out",
                     stagger: 0.15
@@ -441,12 +462,12 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
                 },
                 "together-=0.1"
             )
-            .to(".screen-container", { rotationZ: 185, duration: 1.5, scale: 0.25, ease: "none" }, "together")
+            .to(".screen-container", { rotationZ: 185, duration: 1.5, scale: isMobile ? 0.5 : 0.25, ease: "none" }, "together")
             .to(".screen-container", { rotationY: 90, duration: 1.5, ease: "none" }, "together")
             .addLabel("together2")
             .to(".screen-container", { rotationY: 180, duration: 1.5, ease: "none" }, "together2")
-            .to(".screen-container", { rotationZ: 420, duration: 2, scale: 0.15, ease: "none" }, "together2")
-            .to(".screen-container", { duration: 2, ease: "none" });
+            .to(".screen-container", { rotationZ: 420, duration: 2, scale: isMobile ? 0.4 : 0.15, ease: "none" }, "together2")
+            .to(".screen-container", { duration: 5, ease: "none" });
 
     }, []);
 
@@ -552,7 +573,22 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
             }
         });
     }, [isLoading, initScrollAnimations, unlockScroll]);
-
+    useEffect(() => {
+        // subtle breathing animation (idle)
+        if (scrollHintHomeRef.current) {
+            gsap.fromTo(
+                scrollHintHomeRef.current,
+                { y: 0 },
+                {
+                    y: 10,
+                    duration: 1,
+                    ease: "power1.inOut",
+                    repeat: -1,
+                    yoyo: true,
+                }
+            );
+        }
+    })
     return (
         <div>
             <div id="svgContainer" className="fixed inset-0 z-10 transition-opacity duration-2400" ref={svgContainerRef} >
@@ -573,9 +609,7 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
             ) : <></>
             }
             <>
-                <Navbar visible={showNavbar}>
-                    <NavigationPanel />
-                </Navbar>
+
 
                 <div className="hero relative inset-0 h-screen z-25" ref={heroRef}>
                     <div id="maskLayer" className="absolute inset-0 opacity-100 " ref={maskLayerRef} style={{
@@ -588,10 +622,10 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
                         maskPosition: 'center',
                         maskSize: '0% 0%',
                     }}>
-                        <img id="coloredImage" src="/images_home/RedHand2.jpeg" alt="Red Hand" ref={coloredImageRef} className="absolute inset-0 h-full w-full object-cover pointer-events-none" />
+                        <img id="coloredImage" src="/images_home/RedHand2.jpeg" alt="Red Hand" ref={coloredImageRef} className="absolute inset-0 h-full w-full object-contain min-[450px]:object-cover pointer-events-none" />
 
                         <div id="flipCard" className="absolute inset-0 transform-3d" ref={flipCardRef}>
-                            <img id="redCard" className="absolute inset-0 w-full h-full object-cover pointer-events-none backface-hidden" src="/images_home/redcard4.png" alt="Red Card" ref={cardRef} />
+                            <img id="redCard" className="absolute inset-0 w-full h-full object-contain min-[450px]:object-cover pointer-events-none backface-hidden" src="/images_home/redcard4.png" alt="Red Card" ref={cardRef} />
 
                             <div id="part3_2" ref={part3_2Ref} style={{
                                 backgroundImage:
@@ -608,22 +642,41 @@ export default function HeroSection({ onEnter }: HeroSectionProps) {
                             </div>
 
                             <div id="part3" ref={part3Ref} className={`absolute inset-0 w-full h-screen transform-[rotateY(180deg)] backface-hidden ${part3Active ? "pointer-events-auto" : "pointer-events-none"}`}>
-                                <div className="register-btn absolute bottom-[50px] right-[50px]">
+                                <div className="register-btn absolute bottom-2/5  max-[450px]:left-1/2 min-[450px]:bottom-[40px] min-[450px]:right-[40px] md:bottom-[60px] md:right-[60px]">
                                     <NavbarButton href="/auth" variant="register">
                                         Register
                                     </NavbarButton>
                                 </div>
 
-                                <div className="title-wrapper flex justify-center pt-[60px] md:pt-[120px] h-[calc(100vh-120px)] md:h-[calc(100vh-200px)]">
-                                    <h1 className="title text-[clamp(48px,15vw,140px)] font-joker leading-none text-center px-4" ref={titleRef}>synapse' 26</h1>
+                                <div className="title-wrapper flex justify-center pt-[80px] sm:pt-[60px] md:pt-[120px] h-[calc(100vh-120px)] md:h-[calc(100vh-200px)]">
+                                    <h1 className="title text-4xl min-[450px]:text-6xl sm:text-7xl md:text-[clamp(40px,12vw,140px)] font-joker leading-none text-center px-4" ref={titleRef}>synapse' 26</h1>
+                                </div>
+                                <div
+                                    ref={scrollHintHomeRef}
+                                    className="scroll-hint-home fixed bottom-0 left-1/2 -translate-x-1/2 z-50
+               text-white select-none pointer-events-none"
+                                >
+                                    <ChevronDown className="stroke-[3px] h-4 w-5 sm:w-8 sm:h-8 translate-y-full" />
+                                    <ChevronDown className="stroke-[3px] h-4 w-5 sm:w-8 sm:h-8 translate-y-1/2" />
+                                    <ChevronDown className="stroke-[3px] h-4 w-5 sm:w-8 sm:h-8" />
+                                    <ChevronDown className="stroke-[3px] h-4 w-5 sm:w-8 sm:h-8 -translate-y-1/2" />
                                 </div>
 
                                 <CountdownTimer targetDate={new Date("2026-02-26 00:00:00")} />
 
                             </div>
                         </div>
-                        <div className='absolute font-jqka flex flex-col z-100 h-[120px] w-[60px] text-xs text-center items-center justify-center gap-[5px] left-1/2 -translate-x-1/2 border-amber-50 bottom-[30px] border-solid border rounded-full px-0.5' ref={scrollHintRef}>
-                            Scroll To Explore <br /><p className="text-3xl text-center">↓</p>
+                        <div
+                            ref={scrollHintRef}
+                            className=" absolute left-1/2 -translate-x-1/2  bottom-5 md:bottom-[30px] z-[100] flex flex-col items-center justify-center gap-1 w-[50px] h-[100px]  md:w-[70px] md:h-[120px] font-jqka text-amber-50 text-[10px] md:text-xs  leading-tight tracking-wide uppercase border border-amber-50  rounded-full backdrop-blur-[2px]"
+                        >
+                            <span className="text-center">
+                                Scroll <br /> To <br /> Explore
+                            </span>
+
+                            <p className="text-xl md:text-3xl mt-1">
+                                ↓
+                            </p>
                         </div>
                     </div>
                 </div>

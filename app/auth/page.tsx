@@ -22,13 +22,16 @@ export default function AuthFlipPage() {
         {/* Dice Logo */}
         <div className="absolute top-8 left-8 z-10">
           <div className="relative w-16 h-16">
-            <Image
-              src="/Synapse Logo.png"
-              alt="Synapse Logo"
-              fill
-              className="object-contain"
-              priority
-            />
+            <Link
+              href="/">
+              <Image
+                src="/Synapse Logo.png"
+                alt="Synapse Logo"
+                fill
+                className="object-contain"
+                priority
+              />
+            </Link>
           </div>
         </div>
 
@@ -44,7 +47,7 @@ export default function AuthFlipPage() {
       </div>
 
       {/* Right Side - Flip Container */}
-      <div className="flex w-full md:w-1/2 md:ml-auto items-center justify-center bg-[#050505] px-6 py-12">
+      <div className="flex max-h-screen w-full md:w-1/2 md:ml-auto items-center justify-center bg-[#050505] px-6 py-12">
         <div className="w-full max-w-[582px] [perspective:1200px] flex items-center justify-center min-h-[600px]">
           <div
             className={`
@@ -122,7 +125,7 @@ function LoginBox({
   }
 
   return (
-    <div className="w-full max-w-[515px]">
+    <div className="w-full max-w-md">
       {/* Title */}
       <h1 className="text-center text-white text-[40px] md:text-[50px] leading-[1.1] font-joker mb-16 tracking-wide">
         welcome back to
@@ -250,63 +253,64 @@ function RegisterBox({
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   return (
-    <div className="w-full max-w-md space-y-8">
-      {/* Header */}
-      <div className="text-center space-y-2 font-joker">
-        <h1 className="text-4xl md:text-5xl font-bold text-white tracking-wider">
+    <div className="w-full max-w-md space-y-4">
+      {/* Header - Font increased */}
+      <div className="text-center space-y-1 font-joker">
+        <h1 className="text-3xl md:text-[40px] mb-6 font-bold text-white tracking-wider">
           the cards are dealt
         </h1>
-        <h2 className="text-3xl md:text-4xl font-bold text-white tracking-wider">
+        <h2 className="text-2xl md:text-3xl font-bold text-white tracking-wider">
           join in
         </h2>
       </div>
 
-      {/* Registration Form */}
-      <div className="space-y-4 border border-white/20 p-8 rounded-lg">
+      {/* Registration Form - Spacing kept tight (p-5, space-y-3) */}
+      <div className="space-y-2 border border-white/20 p-5 rounded-lg">
         {/* Name Fields */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-3">
           <input
             type="text"
             placeholder="E.g. Aditya"
-            className="w-full px-4 py-3 bg-transparent border border-white/30 rounded-md text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50"
+            className="w-full px-3 py-2 bg-transparent border border-white/30 rounded-md text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 text-base"
           />
           <input
             type="text"
             placeholder="E.g. Sharma"
-            className="w-full px-4 py-3 bg-transparent border border-white/30 rounded-md text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50"
+            className="w-full px-3 py-2 bg-transparent border border-white/30 rounded-md text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 text-base"
           />
         </div>
 
         {/* Phone Number */}
         <div className="flex gap-2">
-          <select className="w-32 px-3 py-3 bg-transparent border border-white/30 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white/50">
+          <select className="w-24 px-2 py-2 bg-transparent border border-white/30 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white/50 text-base">
             <option value="91" className="bg-black">
-              INR(+91)
+              +91
             </option>
             <option value="1" className="bg-black">
-              USA(+1)
+              +1
             </option>
             <option value="44" className="bg-black">
-              UK(+44)
+              +44
             </option>
           </select>
           <input
             type="tel"
             placeholder="12345 67890"
-            className="flex-1 px-4 py-3 bg-transparent border border-white/30 rounded-md text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50"
+            className="flex-1 px-3 py-2 bg-transparent border border-white/30 rounded-md text-white placeholder:text-gray-500 w-full focus:outline-none focus:ring-2 focus:ring-white/50 text-base"
           />
         </div>
 
         {/* Date of Birth and Gender */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-3">
           <div className="relative">
             <input
               type="text"
               placeholder="DOB: DD/MM/YYYY"
-              className="w-full px-4 py-3 bg-transparent border border-white/30 rounded-md text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 pr-10"
+              className="w-full px-3 py-2 bg-transparent border border-white/30 rounded-md text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 pr-8 text-base"
             />
+            {/* SVG Icon */}
             <svg
-              className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/50"
+              className="absolute right-2 top-1/2 -translate-y-1/2 h-5 w-5 text-white/50" // Increased icon size slightly to match font
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -317,7 +321,7 @@ function RegisterBox({
               <line x1="3" y1="10" x2="21" y2="10"></line>
             </svg>
           </div>
-          <select className="w-full px-4 py-3 bg-transparent border border-white/30 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white/50">
+          <select className="w-full px-3 py-2 bg-transparent border border-white/30 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-white/50 text-base">
             <option value="" className="bg-black">
               Gender
             </option>
@@ -330,24 +334,21 @@ function RegisterBox({
             <option value="other" className="bg-black">
               Other
             </option>
-            <option value="prefer-not-to-say" className="bg-black">
-              Prefer not to say
-            </option>
           </select>
         </div>
 
         {/* College Name */}
         <input
           type="text"
-          placeholder="E.g. College name like ITB, DAICT, Nirma university"
-          className="w-full px-4 py-3 bg-transparent border border-white/30 rounded-md text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50"
+          placeholder="College Name"
+          className="w-full px-3 py-2 bg-transparent border border-white/30 rounded-md text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 text-base"
         />
 
         {/* Email */}
         <input
           type="email"
           placeholder="E.g. rsharma@gmail.com"
-          className="w-full px-4 py-3 bg-transparent border border-white/30 rounded-md text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50"
+          className="w-full px-3 py-2 bg-transparent border border-white/30 rounded-md text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 text-base"
         />
 
         {/* Password */}
@@ -355,47 +356,17 @@ function RegisterBox({
           <input
             type={showPassword ? "text" : "password"}
             placeholder="Password"
-            className="w-full px-4 py-3 bg-transparent border border-white/30 rounded-md text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 pr-10"
+            className="w-full px-3 py-2 bg-transparent border border-white/30 rounded-md text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 pr-8 text-base"
           />
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-white/70 hover:text-white"
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-white/70 hover:text-white"
           >
             {showPassword ? (
-              <svg
-                className="h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
-                />
-              </svg>
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
             ) : (
-              <svg
-                className="h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                />
-              </svg>
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
             )}
           </button>
         </div>
@@ -405,61 +376,31 @@ function RegisterBox({
           <input
             type={showConfirmPassword ? "text" : "password"}
             placeholder="Confirm Password"
-            className="w-full px-4 py-3 bg-transparent border border-white/30 rounded-md text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 pr-10"
+            className="w-full px-3 py-2 bg-transparent border border-white/30 rounded-md text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50 pr-8 text-base"
           />
           <button
             type="button"
             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-white/70 hover:text-white"
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-white/70 hover:text-white"
           >
             {showConfirmPassword ? (
-              <svg
-                className="h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
-                />
-              </svg>
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
             ) : (
-              <svg
-                className="h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                />
-              </svg>
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
             )}
           </button>
         </div>
 
-        {/* Get OTP Button */}
+        {/* Get OTP Button - Font increased to text-2xl */}
         <button
-          className="w-full bg-white text-black hover:bg-gray-100 text-2xl h-12 rounded-md transition-colors cursor-pointer font-jqka"
+          className="w-full bg-white text-black hover:bg-gray-100 text-2xl h-10 rounded-md transition-colors cursor-pointer font-jqka mt-2"
           type="button"
           onClick={goOtp}
         >
           Get OTP
         </button>
 
-        {/* Login Link */}
+        {/* Login Link - Font increased to text-sm */}
         <p className="text-center text-white text-sm font-sans">
           If you already have an account?{" "}
           <button
@@ -520,7 +461,7 @@ function OtpBox({ goLogin }: { goLogin: () => void }) {
   }
 
   return (
-    <div className="w-full max-w-[542px]">
+    <div className="w-full max-w-md">
       <h1 className="font-joker mb-12 text-center text-4xl leading-tight tracking-wide text-white">
         the cards are dealt
         <br />
@@ -552,7 +493,7 @@ function OtpBox({ goLogin }: { goLogin: () => void }) {
               onChange={(e) => handleChange(index, e.target.value)}
               onKeyDown={(e) => handleKeyDown(index, e)}
               onPaste={handlePaste}
-              className="h-[95px] w-[68px] rounded border border-white/70 bg-transparent text-center font-card text-3xl text-white transition-colors focus:border-white focus:outline-none"
+              className="h-[60px] w-[35px] md:w-[45px] lg:h-[95px] lg:w-[68px] rounded border border-white/70 bg-transparent text-center font-card text-3xl text-white transition-colors focus:border-white focus:outline-none"
             />
           ))}
         </div>
@@ -601,7 +542,7 @@ function ForgotPasswordBox({
   goOtp: () => void
 }) {
   return (
-    <div className="w-full max-w-[582px] space-y-8">
+    <div className="w-full max-w-md space-y-8">
       {/* Header */}
       <div className="text-center space-y-2 mb-29">
         <h1 className="text-3xl md:text-4xl font-joker lowercase text-white tracking-wider">

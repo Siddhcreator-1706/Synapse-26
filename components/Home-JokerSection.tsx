@@ -1,12 +1,18 @@
 'use client';
 
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ChevronDown } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function JokerSection() {
+type JokerSectionProps = {
+    setShowNavbar: React.Dispatch<React.SetStateAction<boolean>>;
+    showNavbar: boolean;
+};
+
+export default function JokerSection({ setShowNavbar, showNavbar }: JokerSectionProps) {
     const jokerSectionRef = useRef<HTMLDivElement>(null);
     const jokerSvgRef = useRef<SVGSVGElement>(null);
     const jokerPathRef = useRef<SVGPathElement>(null);
@@ -18,7 +24,6 @@ export default function JokerSection() {
     const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
     const scrollHintRef = useRef<HTMLDivElement>(null);
     const exploreTitleRef = useRef<HTMLHeadingElement>(null);
-    const fullImageRef = useRef<HTMLDivElement>(null);
 
     const generateViewportPath = useCallback(() => {
         if (typeof window === 'undefined') return '';
@@ -153,9 +158,11 @@ export default function JokerSection() {
                     invalidateOnRefresh: true,
                     onUpdate: (self) => {
                         const progress = self.progress;
-                        if (fullImageRef.current) {
-                            fullImageRef.current.style.display =
-                                progress < 0.05 ? "block" : "none";
+                        if (progress > 0.3) {
+                            setShowNavbar(true);
+                        }
+                        else if (progress <= 0.3) {
+                            setShowNavbar(false);
                         }
                         const point = jokerPath.getPointAtLength(jokerPathLength * progress);
                         const rect = jokerSvg.getBoundingClientRect();
@@ -163,13 +170,14 @@ export default function JokerSection() {
                         const x = rect.left + (point.x / 1000) * rect.width;
                         const y = rect.top + (point.y / 1000) * rect.height;
 
-                        jokerDot.style.left = `${x}px`; // Centered by subtracting half width
-                        jokerDot.style.top = `${y}px`; // Centered by subtracting half height
+                        jokerDot.style.left = `${x}px`;
+                        jokerDot.style.top = `${y}px`;
                     },
                     onEnter: () => {
                         jokerDot.style.opacity = "1";
                         const artistDot = document.getElementById("artistPathDot");
                         if (artistDot) artistDot.style.opacity = "0";
+                        setShowNavbar(false);
                     },
                     onLeave: () => {
                         jokerDot.style.opacity = "0";
@@ -184,7 +192,7 @@ export default function JokerSection() {
                 }
             });
             jokerTl.set(scrollHintRef.current, { opacity: 1 });
-            jokerTl.to({}, { duration: 2 });
+            jokerTl.to({}, { duration: 2 })
             jokerTl.to(scrollHintRef.current, {
                 opacity: 0,
                 duration: 1,
@@ -211,7 +219,8 @@ export default function JokerSection() {
                     x: "100%",
                     duration: 4,
                     ease: "power2.inOut"
-                }, "<");
+                }, "<")
+
             gsap.set(exploreTitleRef.current, {
                 opacity: 0,
                 y: 80,
@@ -233,53 +242,90 @@ export default function JokerSection() {
                 ease: "power1.out"
             }, ">+0.8");
             jokerTl.to(exploreTitleRef.current, {
-                top: "6%",
+                top: "5%",
                 y: -10,
                 duration: 1.8,
                 ease: "power2.inOut"
             }, ">");
 
+            // --- REVISED CARD POSITIONING LOGIC ---
             const getCardX = (i: number) => {
                 const vw = window.innerWidth;
+                const isMobile = vw < 426;
+                const isTablet = vw < 729;
+                const isother = vw < 1000;
+
+                if (isMobile) {
+                    // Reduce spread significantly for mobile ("Inward")
+                    // Use a tighter clustering
+                    const spread = Math.min(vw * 0.4, 140);
+                    // Divide spread by a larger number to compress horizontal space
+                    return (i - 1.5) * (spread / 2.5);
+                }
+                else if (isTablet) {
+                    const spread = Math.min(vw * 0.4, 290);
+
+                    return (i - 1.5) * (spread / 2.5);
+                }
+                else if (isother) {
+                    const spread = Math.min(vw * 0.5, 370);
+
+                    return (i - 1.5) * (spread / 2.3);
+                }
+
+                // Desktop logic
                 const spread = Math.min(vw * 0.35, 420);
                 return (i - 1.5) * (spread / 1.5);
             };
 
             const getCardY = (i: number) => {
                 const vh = window.innerHeight;
-                return [0.1, -0.03, 0.11, -0.02][i] * vh;
+                const isMobile = window.innerWidth < 426;
+                const isTablet = window.innerWidth < 769;
+                const isother = window.innerWidth < 1000;
+
+                if (isMobile) {
+                    const mobileStagger = [-0.15, 0.08, -0.12, 0.18];
+                    return mobileStagger[i] * vh;
+                }
+                else if (isTablet) {
+                    const TabletStagger = [0.09, -0.15, 0.1, -0.1];
+                    return TabletStagger[i] * vh;
+                }
+                else if (isother) {
+                    const TabletStagger = [0.12, -0.09, 0.15, -0.1];
+                    return TabletStagger[i] * vh;
+                }
+
+                // Desktop logic (Existing)
+                return [0.1, -0.08, 0.11, -0.02][i] * vh;
             };
 
-            const getCardR = (i: number) => [-12, 6, -6, 12][i];
+            const getCardR = (i: number) => {
+                const isMobile = window.innerWidth < 426;
+                const isTablet = window.innerWidth < 769;
 
-            jokerTl.to("#c2", {
+                if (isMobile) {
+                    return [-5, -15, 15, 15][i];
+                }
+                if (isTablet) {
+                    return [-15, 10, 5, 15][i];
+                }
+
+                // Slightly steeper rotation on edges for visual flair
+                return [-15, 5, -5, 15][i];
+            };
+
+            jokerTl.to(["#c1", "#c2", "#c3", "#c4"], {
                 opacity: 1,
                 scale: 1,
-                x: getCardX(1),
-                y: getCardY(1),
-                rotation: getCardR(1),
+                x: (i: number) => getCardX(i),
+                y: (i: number) => getCardY(i),
+                rotation: (i: number) => getCardR(i),
                 duration: 2,
                 ease: "expo.out"
-            }, ">+0.5")
-                .to("#c3", {
-                    opacity: 1,
-                    scale: 1,
-                    x: getCardX(2),
-                    y: getCardY(2),
-                    rotation: getCardR(2),
-                    duration: 2,
-                    ease: "expo.out"
-                }, "<+0.3")
-                .to(["#c1", "#c4"], {
-                    opacity: 1,
-                    scale: 1,
-                    x: (i: number) => i ? getCardX(3) : getCardX(0),
-                    y: (i: number) => i ? getCardY(3) : getCardY(0),
-                    rotation: (i: number) => i ? getCardR(3) : getCardR(0),
-                    duration: 2,
-                    ease: "expo.out"
-                }, "<+0.3");
-
+            }, ">+0.5");
+            
             const cardInners = gsap.utils.toArray(".card-inner");
             const shuffledCards = cardInners.sort(() => Math.random() - 0.5);
 
@@ -300,8 +346,8 @@ export default function JokerSection() {
                 const newPath = generateViewportPath();
                 jokerPath.setAttribute("d", newPath);
 
+                // Re-calculate positions on resize so mobile/desktop switch works dynamically
                 jokerTl.scrollTrigger?.refresh();
-
             };
 
             window.addEventListener("resize", handleResize);
@@ -316,14 +362,13 @@ export default function JokerSection() {
                 });
             };
         }
-    }, [generateViewportPath, setupCardHoverAnimations]);
+    }, [generateViewportPath, setupCardHoverAnimations, setShowNavbar]);
 
     useEffect(() => {
         setupPaths();
     }, [setupPaths]);
 
     useEffect(() => {
-        // subtle breathing animation (idle)
         if (scrollHintRef.current) {
             gsap.fromTo(
                 scrollHintRef.current,
@@ -338,6 +383,7 @@ export default function JokerSection() {
             );
         }
     })
+
     const cards = [
         {
             id: 'c1',
@@ -389,8 +435,9 @@ export default function JokerSection() {
                 <div className="joker-content relative top-0 h-screen overflow-hidden">
                     <div className="viewport-wrapper absolute inset-0 flex overflow-hidden z-10">
 
+                        {/* LEFT DOOR */}
                         <div
-                            className="door door-left absolute top-0 w-1/2 h-full bg-white z-100"
+                            className="door door-left absolute top-0 w-1/2 h-full bg-white z-[100]"
                             id="leftDoor"
                             ref={leftDoorRef}
                             style={{
@@ -399,24 +446,27 @@ export default function JokerSection() {
                             }}
                         >
                             <div
-                                className="door-title left-title absolute bottom-8
-             right-0
-             font-joker
-             text-[clamp(3.5rem,8vw,7rem)]
-             tracking-[0.12em]
-             text-black
-             pointer-events-none
-             will-change-transform
-             text-right
-             pr-12"
+                                className="door-title left-title absolute 
+                            bottom-20 md:bottom-8 
+                            right-0
+                            font-joker
+                            text-[clamp(2rem,10vw,5rem)]
+                            leading-none
+                            text-black
+                            pointer-events-none
+                            lg:tracking-[0.1em]
+                            will-change-transform
+                            text-right
+                            pr-4 md:pr-12"
                                 ref={leftTitleRef}
                             >
                                 joker&apos;s
                             </div>
                         </div>
 
+                        {/* RIGHT DOOR */}
                         <div
-                            className="door door-right absolute top-0 right-0 w-1/2 h-full bg-white z-100"
+                            className="door door-right absolute top-0 right-0 w-1/2 h-full bg-white z-100 object-cover"
                             id="rightDoor"
                             ref={rightDoorRef}
                             style={{
@@ -425,35 +475,38 @@ export default function JokerSection() {
                             }}
                         >
                             <div
-                                className="door-title right-title absolute bottom-8
-             left-0
-             font-joker
-             text-[clamp(3.5rem,8vw,7rem)]
-             tracking-[0.12em]
-             text-black
-             pointer-events-none
-             will-change-transform
-             text-left
-             pl-12"
+                                className="door-title right-title absolute 
+                            bottom-20 md:bottom-8
+                            left-0
+                            font-joker
+                            text-[clamp(2rem,10vw,5rem)]
+                            leading-none
+                            text-black
+                            lg:tracking-[0.1em]
+                            pointer-events-none
+                            will-change-transform
+                            text-left
+                            pl-4 md:pl-12"
                                 ref={rightTitleRef}
                             >
                                 realm
                             </div>
                         </div>
 
+                        {/* CENTER CONTENT */}
                         <div className="main-content absolute inset-0 flex flex-col items-center justify-center bg-black z-5">
                             <h1
                                 ref={exploreTitleRef}
                                 className="font-joker text-center
-    text-[clamp(3rem,8vw,8rem)]
-    w-11/12
-    z-2
-    absolute
-    top-1/2
-    -translate-y-1/2
-    text-gray-500
-    will-change-transform
-    origin-center"
+                            text-[clamp(2.5rem,10vw,8rem)]
+                            w-11/12
+                            z-2
+                            absolute
+                            top-1/2
+                            -translate-y-1/2
+                            text-gray-500
+                            will-change-transform
+                            origin-center"
                             >
                                 explore events
                             </h1>
@@ -479,29 +532,32 @@ export default function JokerSection() {
 
                             <div
                                 id="jokerPathDot"
-                                className="fixed w-22.5 h-22.5 bg-[#ff0000] rounded-full blur-[20px] pointer-events-none z-5 opacity-0 -translate-x-1/2 -translate-y-1/2"
+                                className="fixed w-14 h-14 md:w-22.5 md:h-22.5 bg-[#ff0000] rounded-full blur-[15px] md:blur-[20px] pointer-events-none z-5 opacity-0 -translate-x-1/2 -translate-y-1/2"
                                 ref={jokerDotRef}
                             ></div>
 
-                            <div className="burst-zone relative w-full h-[70vh] pointer-events-auto flex justify-center items-center z-10">
+                            {/* CARD BURST ZONE */}
+                            <div className="burst-zone relative w-full h-[60vh] md:h-[70vh] pointer-events-auto flex justify-center items-center z-10">
                                 {cards.map((card, index) => (
                                     <div
                                         key={card.id}
-                                        className="card-container absolute"
+                                        className="card-container absolute min-h[180px] min-w-[150px]"
                                         style={{
-                                            width: 'clamp(100px, 22vw, 220px)',
-                                            height: 'clamp(140px, 30vw, 310px)',
-                                            transform: 'translateY(120vh) scale(0)',
+                                            // Modified clamps for better mobile aspect ratio
+                                            width: 'clamp(90px, 20vw, 240px)',
+                                            height: 'clamp(120px, 25vw, 300px)',
+                                            transform: 'translateY(120vh)',
                                         }}
                                         id={card.id}
                                         ref={el => { cardRefs.current[index] = el }}
                                     >
                                         <div
-                                            className="card-inner w-full h-full transform-style-preserve-3d rounded transition-transform duration-100 ease-in-out"
+                                            className="card-inner w-full h-full transform-style-preserve-3d transition-transform duration-100 ease-in-out"
                                             style={{ transformStyle: 'preserve-3d' }}
                                         >
+                                            {/* Card Front */}
                                             <div
-                                                className="card-front absolute inset-0 backface-hidden lowercase rounded-lg shadow-[0_15px_35px_rgba(0,0,0,0.6)] font-joker"
+                                                className="card-front absolute inset-0 backface-hidden lowercase font-joker"
                                                 style={{
                                                     backgroundImage: `image-set(url(${card.image.avif}) type("image/avif"),url(${card.image.png}) type("image/png"))`,
                                                     backgroundRepeat: "no-repeat",
@@ -511,8 +567,10 @@ export default function JokerSection() {
                                                 }}
                                             >
                                             </div>
+
+                                            {/* Card Back */}
                                             <div
-                                                className="card-back absolute inset-0 backface-hidden rounded-lg lowercase shadow-[0_15px_35px_rgba(0,0,0,0.6)] font-joker flex flex-col gap-4 items-center justify-center p-8 text-center"
+                                                className="card-back absolute inset-0 backface-hidden lowercase font-joker flex flex-col gap-2 md:gap-4 items-center justify-center p-4 md:p-8 text-center"
                                                 style={{
                                                     background: "url('/images_home/card_back.avif') no-repeat center center",
                                                     backgroundSize: 'contain',
@@ -520,8 +578,10 @@ export default function JokerSection() {
                                                     transform: 'rotateY(180deg)'
                                                 }}
                                             >
-                                                <h2 className="text-black text-3xl font-bold">{card.day}</h2>
-                                                <h2 className={card.isRed ? 'text-[#cf0000] font-jqka text-4xl font-bold' : 'text-black text-4xl font-jqka font-bold'}>{card.name}</h2>
+                                                <h2 className="text-black text-sm md:text-xl lg:text-3xl font-bold">{card.day}</h2>
+                                                <h2 className={card.isRed ? 'text-[#cf0000] font-jqka max-w-[70%] md:max-w-full text-base md:text-xl lg:text-4xl font-bold ' : 'text-black max-w-[70%] md:max-w-full text-base md:text-xl lg:text-4xl font-jqka font-bold'}>
+                                                    {card.name}
+                                                </h2>
                                             </div>
                                         </div>
                                     </div>
@@ -529,16 +589,22 @@ export default function JokerSection() {
                             </div>
                         </div>
                     </div>
+
+                    {/* SCROLL HINT */}
                     <div
                         ref={scrollHintRef}
-                        className="scroll-hint opacity-0 fixed bottom-8 left-1/2 -translate-x-1/2 z-50
-               text-black rotate-90 text-[clamp(20px,4vw,36px)]
-               tracking-[-0.3rem] opacity-0 select-none pointer-events-none"
+                        className="scroll-hint opacity-0 fixed bottom-4 md:bottom-0 left-1/2 -translate-x-1/2 z-50
+       text-black select-none pointer-events-none"
                     >
-                        &gt;&gt;&gt;&gt;
+                        <ChevronDown className="stroke-[3px] w-6 h-6 md:w-8 md:h-8 translate-y-full" />
+                        <ChevronDown className="stroke-[3px] w-6 h-6 md:w-8 md:h-8 translate-y-1/2" />
+                        <ChevronDown className="stroke-[3px] w-6 h-6 md:w-8 md:h-8" />
+                        <ChevronDown className="stroke-[3px] w-6 h-6 md:w-8 md:h-8 -translate-y-1/2" />
                     </div>
                 </div>
             </div>
+
+            {/* Spacers for scroll animation context */}
             <div className='h-screen' />
             <div className='h-screen' />
             <div className='h-screen' />

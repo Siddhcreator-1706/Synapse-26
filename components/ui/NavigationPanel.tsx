@@ -87,7 +87,7 @@ export default function NavigationPanel() {
 
     return (
         <>
-            <MobileNav>
+            <MobileNav >
                 <MobileNavHeader>
                     <NavbarLogo />
                     <div ref={toggleRef}>

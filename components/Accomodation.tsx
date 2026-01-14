@@ -114,8 +114,8 @@ export function AccommodationComponent() {
     return (
         <div className="min-h-screen bg-black text-white font-jqka">
             {/* Header */}
-            <div className="pt-8 md:pt-12 pb-6 md:pb-8 text-center px-4">
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-joker mb-2">accommodation</h1>
+            <div className="pb-6 md:pb-8 text-center px-4">
+                <h1 className="pt-5 text-3xl md:text-6xl lg:text-8xl font-joker mb-2">accommodation</h1>
             </div>
 
             {/* Main Content */}
@@ -153,9 +153,9 @@ export function AccommodationComponent() {
                                     key={index}
                                     className="flex items-center gap-3 md:gap-4 p-3 md:p-4 cursor-pointer hover:bg-white/5 transition-all"
                                 >
-                                    <div className="w-5 h-5 md:w-6 md:h-6 bg-white flex items-center justify-center flex-shrink-0">
+                                    <div className="w-5 md:w-6 h-6 bg-white flex items-center justify-center flex-shrink-0">
                                         {selectedRange?.startIndex === range.startIndex && (
-                                            <div className="w-5 h-5 md:w-6 md:h-6 border-2 border-white bg-blue-600" />
+                                            <div className="w-5 h-6 md:w-6  text-blue-700 font-black text-lg md:text-xl text-center justify-center item-center font-jqka scale-125 select-none">✔</div>
                                         )}
                                     </div>
                                     <button

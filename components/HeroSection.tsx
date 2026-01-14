@@ -7,9 +7,10 @@ export default function HeroSection() {
   return (
     <>
       <div className="relative w-full h-[500px] md:h-[650px] overflow-hidden">
-        <Navbar visible={true}>
-          <NavigationPanel />
-        </Navbar>
+        
+          <Navbar visible={true}><NavigationPanel />
+</Navbar>
+        
 
         <img
           src="/images_sponsor/image 29.png"

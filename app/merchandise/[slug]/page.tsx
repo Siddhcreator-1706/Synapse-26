@@ -79,44 +79,57 @@ export default function ProductPage() {
     const images = [product.image, product.image, product.image];
 
     return (
-        <div className="w-full bg-black text-white min-h-screen pt-24">
+        <div className="w-full bg-black text-white min-h-screen pt-20">
+
             <Navbar visible={true}>
                 <NavigationPanel />
             </Navbar>
 
             {/* BREADCRUMB */}
-            <div className="text-sm px-6 mb-2 flex gap-1 items-center mt-4 gap-2">
+            <div className="text-sm px-4 md:px-6 mb-4 flex items-center gap-2 flex-wrap">
                 <Link href="/" className="text-white/60 hover:text-red-500 transition-colors font-Inter">Home</Link>
                 <span className="text-red-500 font-Inter">{">"}</span>
                 <Link href="/merchandise" className="text-white/60 hover:text-red-500 transition-colors font-Inter">
                     Merchandise
                 </Link>
                 <span className="text-red-500 font-Inter">{">"}</span>
-                <span className="text-red-500 font-Inter">{product.name}</span>
+                <span className="text-red-500 font-Inter break-all line-clamp-1">{product.name}</span>
             </div>
 
             {/* MAIN CONTENT */}
-            <div className="flex flex-col md:flex-row gap-16 px-6 md:px-16 mt-8">
+            <div className="flex flex-col lg:flex-row gap-10 md:gap-16 px-4 md:px-16 mt-4 md:mt-8 mb-12">
 
                 {/* LEFT IMAGE AREA */}
-                <div className="flex gap-4 md:w-1/2 justify-center">
+                {/* Mobile: Image Top, Thumbnails Bottom (Horizontal) */}
+                {/* Desktop: Thumbnails Left, Image Right (Vertical) */}
+                <div className="flex flex-col md:flex-row gap-6 lg:w-1/2 items-center justify-center md:items-start">
 
-                    {/* THUMBNAILS */}
-                    <div className="flex flex-col gap-4 mt-1">
+                    {/* THUMBNAILS CONTAINER */}
+                    {/* Order 2 on Mobile (Bottom), Order 1 on Desktop (Left) */}
+                    <div className="
+        order-2 md:order-1 
+        flex flex-row md:flex-col 
+        gap-3 md:gap-4 
+        w-full md:w-auto 
+        justify-center 
+        overflow-x-auto md:overflow-visible 
+        pb-2 md:pb-0 
+        scrollbar-hide
+    ">
                         {images.map((img, i) => {
                             const isActive = activeImage === i;
-
                             return (
                                 <button
                                     key={i}
                                     onClick={() => setActiveImage(i)}
                                     className={`
-                    w-16 h-16 p-1
-                    border transition-all duration-200
-                    ${isActive
-                                            ? "border-white opacity-100"
-                                            : "border-white/30 opacity-60 hover:opacity-100 hover:border-white"}
-                `}
+                        flex-shrink-0
+                        w-14 h-14 md:w-16 md:h-16 p-1
+                        border rounded-md overflow-hidden transition-all duration-200
+                        ${isActive
+                                            ? "border-white opacity-100 ring-1 ring-white/50"
+                                            : "border-white/20 opacity-60 hover:opacity-100 hover:border-white/50"}
+                    `}
                                 >
                                     <img
                                         src={img}
@@ -127,94 +140,123 @@ export default function ProductPage() {
                             );
                         })}
                     </div>
+
                     {/* MAIN IMAGE */}
-                    <img
-                        src={images[activeImage]}
-                        className="w-[300px] md:w-[420px] rounded-sm"
-                    />
+                    {/* Order 1 on Mobile (Top), Order 2 on Desktop (Right) */}
+                    <div className="order-1 md:order-2 w-full flex justify-center">
+                        {/* Sizing Constraints:
+            - max-w-[350px]: Keeps it contained on mobile
+            - md:max-w-[450px]: Allows growth on tablet/desktop
+            - aspect-[4/5]: consistent merchandise shape
+        */}
+                        <div className="relative w-full max-w-[350px] md:max-w-[450px] aspect-[4/5] bg-white/5 rounded-lg overflow-hidden border border-white/10 shadow-2xl mx-auto">
+                            <img
+                                src={images[activeImage]}
+                                className="w-full h-full object-cover"
+                                alt="Main Product"
+                            />
+                        </div>
+                    </div>
+
                 </div>
 
                 {/* RIGHT DETAILS */}
-                <div className="md:w-1/2 space-y-6">
+                <div className="w-full lg:w-1/2 space-y-6">
 
-                    {/* TITLE */}
-                    <h1
-                        className="text-3xl md:text-4xl leading-tight font-jqka"
-
-                    >
-                        {product.name}
-                    </h1>
-
-                    <p className="text-green-400 text-2xl">₹ {product.price}</p>
-
-                    {/* SIZES */}
-                    <div className="flex gap-2 flex-wrap">
-                        {product.sizes.map((s) => {
-                            const isSelected = selectedSize === s;
-
-                            return (
-                                <button
-                                    key={s}
-                                    onClick={() => setSelectedSize(s)}
-                                    className={`
-          px-3 py-1 border cursor-pointer transition-all duration-200
-          ${isSelected
-                                            ? "bg-white text-black border-white"
-                                            : "border-white text-white hover:bg-white hover:text-black"
-                                        }
-        `}
-                                >
-                                    {s}
-                                </button>
-                            );
-                        })}
+                    {/* TITLE & PRICE */}
+                    <div>
+                        <h1 className="text-3xl md:text-5xl leading-tight font-jqka mb-2">
+                            {product.name}
+                        </h1>
+                        <p className="text-green-400 text-2xl md:text-3xl font-medium">₹ {product.price}</p>
                     </div>
 
+                    {/* SIZES */}
+                    <div>
+                        <p className="text-sm text-white/60 mb-2 font-Inter uppercase tracking-wider">Select Size</p>
+                        <div className="flex gap-3 flex-wrap">
+                            {product.sizes.map((s) => {
+                                const isSelected = selectedSize === s;
+                                return (
+                                    <button
+                                        key={s}
+                                        onClick={() => setSelectedSize(s)}
+                                        className={`
+                                    px-4 py-2 border cursor-pointer transition-all duration-200 min-w-[3rem]
+                                    ${isSelected
+                                                ? "bg-white text-black border-white"
+                                                : "border-white/30 text-white hover:border-white"
+                                            }
+                                `}
+                                    >
+                                        {s}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
 
                     {/* QUANTITY */}
-                    <div className="flex items-center gap-3 mt-4">
-                        <button
-                            onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                            className="w-8 h-8 border border-white hover:bg-white hover:text-black transition"
-                        >
-                            −
-                        </button>
-                        <span className="w-6 text-center">{quantity}</span>
-                        <button
-                            onClick={() => setQuantity((q) => q + 1)}
-                            className="w-8 h-8 border border-white hover:bg-white hover:text-black transition"
-                        >
-                            +
-                        </button>
+                    <div>
+                        <p className="text-sm text-white/60 mb-2 font-Inter uppercase tracking-wider">Quantity</p>
+                        <div className="flex items-center gap-3">
+                            <button
+                                onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                                className="w-10 h-10 border border-white/30 hover:border-white hover:bg-white hover:text-black transition flex items-center justify-center text-xl"
+                            >
+                                −
+                            </button>
+                            <span className="w-8 text-center text-lg">{quantity}</span>
+                            <button
+                                onClick={() => setQuantity((q) => q + 1)}
+                                className="w-10 h-10 border border-white/30 hover:border-white hover:bg-white hover:text-black transition flex items-center justify-center text-xl"
+                            >
+                                +
+                            </button>
+                        </div>
                     </div>
 
                     {/* BUY BUTTON */}
                     <button
                         className="
-    mt-6
-    w-full max-w-[280px]
-    border border-white
-    py-3 text-lg
-    font-jqka
-    hover:bg-white hover:text-black
-    transition
-    mx-auto md:mx-0 cursor-pointer
-  "
-  onClick={(event) => {alert("Payment Gateway yet not connected")}}
-
+                    mt-8
+                    w-full sm:max-w-[280px]
+                    border border-white
+                    py-4 text-2xl
+                    font-jqka
+                    bg-white text-black md:bg-transparent md:text-white
+                    md:hover:bg-white md:hover:text-black
+                    transition-all duration-300
+                    cursor-pointer
+                "
+                        onClick={() => { alert("Payment Gateway yet not connected") }}
                     >
                         Buy Now
                     </button>
 
-                    {/* NOTES */}
-                    <p className="text-sm text-blue-300">{product.note}</p>
+                    {/* DIVIDER */}
+                    <div className="w-full h-[1px] bg-white/10 my-6"></div>
 
-                    {/* FEATURES */}
-                    <ul className="text-sm text-white/80 leading-relaxed">
-                        {product.features.map((f) => (
-                            <li key={f}>- {f}</li>
-                        ))}
-                    </ul>
+                    {/* NOTES & FEATURES */}
+                    <div className="space-y-4">
+                        {product.note && (
+                            <p className="text-sm text-blue-300 bg-blue-500/10 p-3 rounded border border-blue-500/20 inline-block">
+                                Note: {product.note}
+                            </p>
+                        )}
+
+                        <div>
+                            <h3 className="text-white font-Inter mb-2 uppercase tracking-wider text-sm">Product Details</h3>
+                            <ul className="text-sm md:text-base text-white/70 leading-relaxed space-y-1">
+                                {product.features.map((f) => (
+                                    <li key={f} className="flex gap-2">
+                                        <span className="text-white/30">•</span>
+                                        {f}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
 

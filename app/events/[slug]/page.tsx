@@ -16,12 +16,13 @@ export default function EventDetailPage() {
 
     return (
         <main className="bg-black text-white min-h-screen overflow-x-hidden">
-            <Navbar visible={true}>
-                <NavigationPanel />
-            </Navbar>
+            
+                <Navbar visible={true}><NavigationPanel />
+</Navbar>
+            
 
             {/* TRIANGLE HEADER */}
-            <header className="relative w-full h-[55vh] mt-10 min-h-[520px]">
+            <header className="relative w-full h-[55vh] min-h-[520px]">
                 <Image
                     src="/images_events/upper.png"
                     alt=""
@@ -49,7 +50,7 @@ export default function EventDetailPage() {
             </header>
 
             {/* TITLE */}
-            <section className="relative -mt-[140px] mb-20 text-center">
+            <section className="relative -mt-[50px] mb-20 text-center">
                 <h1 className="font-joker lowercase tracking-[0.12em]
                        text-3xl sm:text-5xl lg:text-7xl">
                     {page.title}

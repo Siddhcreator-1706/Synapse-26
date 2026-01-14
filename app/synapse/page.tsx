@@ -10,9 +10,12 @@ import HallOfFame from "@/components/Home-HallOfFame";
 import Footer from "@/components/ui/Footer";
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import FluidCanvas from "@/components/FluidCanvas";
+import NavigationPanel from "@/components/ui/NavigationPanel";
+import { Navbar } from "@/components/ui/Resizable-navbar";
 
 export default function HomeSection() {
   const [entered, setEntered] = useState(false);
+  const [showNavbar, setShowNavbar] = useState(false);
 
   // Refresh GSAP after .end mounts
   useEffect(() => {
@@ -26,7 +29,10 @@ export default function HomeSection() {
   return (
     <main className="flex flex-col min-h-screen relative">
       {entered ? <FluidCanvas /> : ""}
-      <HeroSection onEnter={() => setEntered(true)} />
+      <Navbar visible={showNavbar}>
+        <NavigationPanel />
+      </Navbar>
+      <HeroSection onEnter={() => setEntered(true)} setShowNavbar={setShowNavbar} showNavbar={showNavbar} />
       <div
         className={`
             end
@@ -34,18 +40,19 @@ export default function HomeSection() {
             w-full
             flex-col
             z-30
-            mt-[300vh]
+            mt-[200vh]
             transition-opacity
             duration-700
             ${entered ? "flex opacity-100" : "hidden opacity-0"}
           `}
       >
-        <AboutSection />
-        <JokerSection />
+        <AboutSection /> 
+        <JokerSection setShowNavbar={setShowNavbar} showNavbar={showNavbar}/>
         <ArtistsSection />
         <HallOfFame />
         <Footer />
       </div>
+      
     </main>
   );
 }

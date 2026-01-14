@@ -70,7 +70,7 @@ export const Navbar = ({
         y: visible ? 0 : -80,
         pointerEvents: visible ? "auto" : "none"
       }}
-      transition={{ duration: 1, ease: "easeOut" }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
     >
       {children}
     </motion.div>
@@ -147,7 +147,7 @@ export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
         boxShadow: visible
           ? "0 4px 30px rgba(235, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.1)"
           : "none",
-        width: visible ? "100%" : "100%",
+        width: visible ? "0px" : "100%",
         paddingRight: visible ? "12px" : "0px",
         paddingLeft: visible ? "12px" : "0px",
         y: visible ? 20 : 0,
@@ -158,7 +158,7 @@ export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
         damping: 50,
       }}
       className={cn(
-        "relative z-50 mx-auto flex w-full flex-col items-center justify-between px-4 py-3 ",
+        "relative z-50 mx-auto flex w-full flex-col items-center justify-between px-4",
         visible,
         className,
       )}
@@ -181,8 +181,7 @@ export const MobileAnimatedMenuItem = ({
         group w-full
         grid grid-cols-[1fr_auto] items-center
         cursor-pointer select-none
-        text-white
-        font-joker
+        text-white font-joker
       "
     >
       {/* TEXT */}
@@ -243,7 +242,7 @@ export const MobileNavHeader = ({
   return (
     <div
       className={cn(
-        "flex w-full px-9 flex-row items-center justify-between",
+        "flex w-full px-4 py-2 flex-row items-center justify-between",
         className,
       )}
     >
@@ -268,7 +267,7 @@ export const MobileNavMenu = forwardRef<
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           className={cn(
-            "absolute inset-x-0 top-16 max-h-[70vh] overflow-y-auto z-150 flex w-[95%] flex-col left-1/2 -translate-x-1/2 items-start justify-start gap-4 rounded-lg bg-black/95 px-4 py-8 border border-white/10 shadow-[0_4px_30px_rgba(235,0,0,0.15)] overscroll-contain",
+            "absolute inset-x-0 top-5 max-h-[70vh] overflow-y-auto z-150 flex w-[calc(100%-130px)] flex-col left-[75px] items-start justify-start gap-4 rounded-lg bg-black/95 px-4 py-8 border border-white/10 shadow-[0_4px_30px_rgba(235,0,0,0.15)] overscroll-contain",
             className,
           )}
           onWheel={(e) => e.stopPropagation()}
@@ -289,9 +288,9 @@ export const MobileNavToggle = ({
   onClick: () => void;
 }) => {
   return isOpen ? (
-    <IconX className="text-white cursor-pointer hover:text-[#EB0000] transition-colors" onClick={onClick} />
+    <IconX size={35} className="text-white cursor-pointer hover:text-[#EB0000] transition-colors" onClick={onClick} />
   ) : (
-    <IconMenu3 size={32} className="text-white cursor-pointer hover:text-[#EB0000] transition-colors" onClick={onClick} />
+    <IconMenu3 size={35} className="text-white scale-[0.9] md:scale-[1] cursor-pointer hover:text-[#EB0000] transition-colors" onClick={onClick} />
   );
 };
 
@@ -306,7 +305,7 @@ export const NavbarLogo = () => {
         alt="Synapse Logo"
         width={35}
         height={35}
-        className="w-auto h-[35px]"
+        className="w-auto h-[35px] md:h-[45px]"
         priority
       />
     </Link>
@@ -349,7 +348,7 @@ export const NavbarButton: React.FC<NavbarButtonProps> = ({
       "bg-transparent text-white border-2 border-white shadow-[6px_6px_0px_#EB0000] hover:bg-[#EB0000] hover:text-black hover:border-black hover:shadow-[6px_6px_0px_rgba(255,255,255,0.7)] hover:-translate-y-0.5 hover:scale-105",
 
     register:
-      "text-[clamp(1.25rem,4vw,1.875rem)] border-[5px] border-white rounded-[10px] bg-transparent text-white shadow-[10px_10px_0px_#EB0000] hover:bg-[#EB0000] hover:text-black hover:border-black hover:scale-105 hover:shadow-[10px_10px_0px_rgba(255,255,255,0.7)] font-normal font-jqka",
+      "max-[450px]:-translate-x-1/2 max-[450px]:translate-y-1/2 text-[clamp(1.25rem,4vw,1.875rem)] border-[5px] border-white rounded-[10px] bg-black text-white shadow-[10px_10px_0px_#EB0000] hover:bg-[#EB0000] hover:text-black hover:border-black hover:scale-105 hover:shadow-[10px_10px_0px_rgba(255,255,255,0.7)] font-normal font-jqka",
   };
 
   const button = (
