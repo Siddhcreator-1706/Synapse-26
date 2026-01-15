@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/react";
 import { Geist, Geist_Mono, Bebas_Neue, Inter, Roboto, Poppins } from "next/font/google";
 import { SmoothScroller } from "@/components/ui/SmoothScroller";
 import Script from 'next/script'
@@ -64,6 +65,7 @@ export default function RootLayout({
         <SmoothScroller >
           {children}
         </SmoothScroller>
+        <Analytics />
       </body>
     </html>
   );
