@@ -142,7 +142,7 @@ export default function LoginPage() {
 
             {/* Sign Up Link - Red color for "Sign up" link */}
             <p className="text-center text-white/70 text-base mt-4 font-sans">
-              Don't have an account?{" "}
+              Dont have an account?{" "}
               <Link href="/register" className="text-[#dc2626] hover:underline font-poppins font-medium">
                 Sign up
               </Link>

@@ -56,7 +56,7 @@ export default function ForgotPasswordPage() {
 
             {/* Sign Up Link */}
             <p className="text-center font-sans text-white text-sm">
-              Don't have an account?{" "}
+              Dont have an account?{" "}
               <Link href="/register" className="text-red-500 hover:text-red-400 font-semibold">
                 Sign up
               </Link>
