@@ -21,10 +21,12 @@
 //   ]
 // }
 
-import { checkAdminFromRequest } from "@/lib/checkAdmin";
-import { corsHeaders, handleCorsResponse, addCorsHeaders } from "@/lib/cors";
-import { createClient } from "@/utils/supabase/server";
-import { NextResponse } from "next/server";
+
+import { checkAdminFromRequest } from '@/lib/checkAdmin'
+import { corsHeaders, handleCorsResponse, addCorsHeaders } from '@/lib/cors'
+import { createClient } from '@/utils/supabase/server'
+import { NextResponse } from 'next/server'
+import { uploadImage, deleteImage } from '@/lib/imageUtil'
 
 // Handle CORS preflight requests
 export async function OPTIONS(request: Request) {
@@ -65,7 +67,7 @@ export async function POST(request: Request) {
   const origin = request.headers.get("origin");
 
   // Use token-based auth for cross-origin requests
-  const { isAdmin, supabase } = await checkAdminFromRequest(request);
+  const { isAdmin, supabase } = await checkAdminFromRequest(request)
 
   if (!isAdmin || !supabase) {
     const response = NextResponse.json(
@@ -76,28 +78,54 @@ export async function POST(request: Request) {
   }
 
   try {
-    const body = await request.json();
+    const formData = await request.formData()
+
+    const event_name = formData.get('event_name') as string
+    const category_id = formData.get('category_id') as string
+    const event_date = formData.get('event_date') as string
+    const rulebook = formData.get('rulebook') as string | null
+    const description = formData.get('description') as string | null
+    const is_registration_open = formData.get('is_registration_open') === 'true'
+    const is_dau_free = formData.get('is_dau_free') === 'true'
+    const imageFile = formData.get('image') as File | null
+    const feesJson = formData.get('fees') as string | null
+
+    let event_picture = null
+
+    // Upload image if provided
+    if (imageFile && imageFile.size > 0) {
+      const uploadResult = await uploadImage({
+        file: imageFile,
+        bucket: 'synapse',
+        folder: 'events'
+      })
+      event_picture = uploadResult.publicUrl
+    }
 
     // A. Create the Event
     const { data: eventData, error: eventError } = await supabase
       .from("event")
       .insert({
-        event_name: body.event_name,
-        category_id: body.category_id,
-        event_date: body.event_date,
-        event_picture: body.event_picture || null,
-        rulebook: body.rulebook || null,
-        description: body.description || null,
-        is_registration_open: body.is_registration_open ?? true,
-        is_dau_free: body.is_dau_free ?? false,
+        event_name,
+        category_id: Number(category_id),
+        event_date,
+        event_picture,
+        rulebook: rulebook || null,
+        description: description || null,
+        is_registration_open,
+        is_dau_free
       })
       .select()
-      .single();
+      .single()
 
-    if (eventError) throw eventError;
+    if (eventError) throw eventError
 
-    if (body.fees && Array.isArray(body.fees) && body.fees.length > 0) {
-      const feeInserts = body.fees.map((f: any) => ({
+    // Parse fees from JSON string
+    const fees = feesJson ? JSON.parse(feesJson) : []
+
+    if (fees && Array.isArray(fees) && fees.length > 0) {
+
+      const feeInserts = fees.map((f: any) => ({
         participation_type: f.type,
         price: Number(f.price),
         min_members: Number(f.min || 1),
@@ -248,12 +276,39 @@ export async function DELETE(request: Request) {
       return addCorsHeaders(response, origin);
     }
 
-    const { error } = await supabase
-      .from("event")
-      .delete()
-      .eq("event_id", Number(id));
+    // Get the event to retrieve the image path
+    const { data: event } = await supabase
+      .from('event')
+      .select('event_picture')
+      .eq('event_id', Number(id))
+      .single()
 
-    if (error) throw error;
+    // Delete the event from database
+    const { error } = await supabase
+      .from('event')
+      .delete()
+      .eq('event_id', Number(id))
+
+    if (error) throw error
+
+    // Delete the image from storage if it exists
+    if (event?.event_picture) {
+      try {
+        // Extract the file path from the public URL
+        const url = new URL(event.event_picture)
+        const pathParts = url.pathname.split('/storage/v1/object/public/synapse/')
+        if (pathParts.length > 1) {
+          const filePath = pathParts[1]
+          await deleteImage({
+            bucket: 'synapse',
+            filePath
+          })
+        }
+      } catch (imgError) {
+        console.error('Failed to delete image:', imgError)
+        // Continue even if image deletion fails
+      }
+    }
 
     const response = NextResponse.json({ success: true });
     return addCorsHeaders(response, origin);

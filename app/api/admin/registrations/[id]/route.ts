@@ -23,6 +23,7 @@ export async function GET(
         transaction_id,
         registration_id,
         payment_status,
+        gross_amount,
         
         users (
           user_name,
@@ -39,8 +40,7 @@ export async function GET(
             event_category ( category_name )
           ),
           fee (
-            participation_type,
-            price
+            participation_type
           )
         ),
         payment_method (
@@ -56,7 +56,7 @@ export async function GET(
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    const price = data.event_fee?.fee?.price ?? 0;
+    const price = data.gross_amount ?? 0;
     const gateway = data.payment_method?.gateway_charge ?? 0;
     const teamSize = data.team?.team_members?.length ?? 1;
 

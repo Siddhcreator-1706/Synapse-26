@@ -1,5 +1,6 @@
-import { createClient } from "@/utils/supabase/server";
-import { NextRequest, NextResponse } from "next/server";
+import { createClient } from '@/utils/supabase/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { uploadImage } from '@/lib/imageUtil';
 
 // GET - Fetch all sponsors
 export async function GET() {
@@ -32,11 +33,17 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const supabase = (await createClient()) as any;
-    const body = await request.json();
+    const supabase = await createClient() as any;
+    const formData = await request.formData();
+
+    const name = formData.get('name') as string;
+    const tier = formData.get('tier') as string;
+    const website_url = formData.get('website_url') as string | null;
+    const description = formData.get('description') as string | null;
+    const imageFile = formData.get('image') as File | null;
 
     // Validate required fields
-    if (!body.name || !body.tier) {
+    if (!name || !tier) {
       return NextResponse.json(
         { error: "Name and tier are required fields" },
         { status: 400 }
@@ -44,21 +51,33 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate tier is not empty string
-    if (body.tier.trim() === "") {
+    if (tier.trim() === '') {
       return NextResponse.json(
         { error: "Tier cannot be empty" },
         { status: 400 }
       );
     }
 
+    let logo_url = null;
+
+    // Upload image if provided
+    if (imageFile && imageFile.size > 0) {
+      const uploadResult = await uploadImage({
+        file: imageFile,
+        bucket: 'synapse',
+        folder: 'sponsors'
+      });
+      logo_url = uploadResult.publicUrl;
+    }
+
     const { data: sponsor, error } = await supabase
       .from("sponsors")
       .insert({
-        name: body.name,
-        tier: body.tier,
-        website_url: body.website_url || null,
-        logo_url: body.logo_url || null,
-        description: body.description || null,
+        name,
+        tier,
+        website_url: website_url || null,
+        logo_url,
+        description: description || null,
       })
       .select()
       .single();
