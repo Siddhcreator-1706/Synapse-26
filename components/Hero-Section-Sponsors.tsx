@@ -14,6 +14,8 @@ export default function HeroSection() {
 
         <Image
           src="/images_sponsor/image 29.png"
+          width={500}
+          height={500}
           alt="Sponsors Hero"
           className="absolute top-0 left-0 w-full h-full object-cover object-top"
         />

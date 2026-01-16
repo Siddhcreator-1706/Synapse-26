@@ -4,32 +4,37 @@ import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/Button";
 
 const Pricing = {
-  2: 1800,
-  3: 2100,
-  4: 2400,
+  2: 2300,
+  3: 2500,
+  4: 2800,
 };
 
-const generateFestivalDates = () => {
+const generateFestivalDates = (exclude26Feb = false) => {
   const dates = [];
-  // February dates (26-28)
+
   for (let i = 26; i <= 28; i++) {
+    if (exclude26Feb && i === 26) continue;
+
     dates.push({
       day: i,
       month: "Feb",
       date: new Date(2026, 1, i),
     });
   }
-  // March dates (1)
+
   dates.push({
     day: 1,
     month: "Mar",
     date: new Date(2026, 2, 1),
   });
+
   return dates;
 };
 
 const getAvailableDateRanges = (nights: number) => {
-  const allDates = generateFestivalDates();
+  const exclude26Feb = nights === 2 || nights === 3;
+  const allDates = generateFestivalDates(exclude26Feb);
+
   const ranges = [];
 
   for (let i = 0; i <= allDates.length - nights; i++) {
@@ -39,23 +44,19 @@ const getAvailableDateRanges = (nights: number) => {
     const months = rangeArray.map((d) => d.month);
 
     let label = "";
+
     if (nights === 2) {
       const isSameMonth = months[0] === months[1];
-      if (isSameMonth) {
-        label = `${startDay} & ${endDay} ${months[0].toLowerCase()}`;
-      } else {
-        label = `${startDay} ${months[0].toLowerCase()} & ${endDay} ${months[1].toLowerCase()}`;
-      }
+      label = isSameMonth
+        ? `${startDay} & ${endDay} ${months[0].toLowerCase()}`
+        : `${startDay} ${months[0].toLowerCase()} & ${endDay} ${months[1].toLowerCase()}`;
     } else {
-      const dayString = rangeArray.map((d) => d.day).join("-");
       const isSameMonth = months.every((m) => m === months[0]);
-      if (isSameMonth) {
-        label = `${dayString} ${months[0].toLowerCase()}`;
-      } else {
-        label = `${rangeArray
+      label = isSameMonth
+        ? `${rangeArray.map((d) => d.day).join("-")} ${months[0].toLowerCase()}`
+        : rangeArray
           .map((d) => `${d.day} ${d.month.toLowerCase()}`)
-          .join(" - ")}`;
-      }
+          .join(" - ");
     }
 
     ranges.push({
@@ -132,12 +133,12 @@ export function AccommodationComponent() {
     );
   };
 
-    return (
-        <div className="min-h-[100dvh] bg-black text-white font-jqka">
-            {/* Header */}
-            <div className="pb-6 md:pb-8 text-center px-4">
-                <h1 className="pt-5 text-3xl md:text-6xl lg:text-8xl font-joker mb-2">accommodation</h1>
-            </div>
+  return (
+    <div className="min-h-[100dvh] bg-black text-white font-jqka">
+      {/* Header */}
+      <div className="pb-6 md:pb-8 text-center px-4">
+        <h1 className="pt-5 text-3xl md:text-6xl lg:text-8xl font-joker mb-2">accommodation</h1>
+      </div>
 
       {/* Main Content */}
       <div className="max-w-4xl mx-auto px-4 md:px-6 py-6 md:py-8">
@@ -155,11 +156,10 @@ export function AccommodationComponent() {
               <button
                 key={nights}
                 onClick={() => handleNightSelection(nights)}
-                className={`p-4 md:p-6 flex flex-col items-center justify-center gap-2 transition-all cursor-pointer ${
-                  selectedNights === nights
-                    ? "border-2 border-white bg-white text-black"
-                    : "border-2 border-white/30 hover:border-white"
-                }`}
+                className={`p-4 md:p-6 flex flex-col items-center justify-center gap-2 transition-all cursor-pointer ${selectedNights === nights
+                  ? "border-2 border-white bg-white text-black"
+                  : "border-2 border-white/30 hover:border-white"
+                  }`}
               >
                 <div className="text-xl md:text-2xl font-bold">
                   {nights} NIGHTS

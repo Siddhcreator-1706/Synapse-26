@@ -10,26 +10,8 @@ export default function MerchPage() {
     {
       slug: "synapse-tee-1",
       name: "Synapse Exclusive Tee",
-      price: 500,
-      thumbnail: "/images_merch/Rectangle 90.png",
-    },
-    {
-      slug: "synapse-tee-2",
-      name: "Synapse Exclusive Tee",
-      price: 500,
-      thumbnail: "/images_merch/Rectangle 91.png",
-    },
-    {
-      slug: "synapse-tee-3",
-      name: "Synapse Exclusive Tee",
-      price: 500,
-      thumbnail: "/images_merch/Rectangle 90-2.png",
-    },
-    {
-      slug: "synapse-tee-4",
-      name: "Synapse Exclusive Tee",
-      price: 500,
-      thumbnail: "/images_merch/Rectangle 91-2.png",
+      price: 400,
+      thumbnail: "/images_merch/Tshirt.jpeg",
     },
   ];
 
@@ -37,7 +19,7 @@ export default function MerchPage() {
     <div className="w-full bg-black text-white min-h-[100dvh]">
 
       {/* HERO */}
-      <div className="relative w-full h-[clamp(320px,55vh,520px)] overflow-hidden">
+      <div className="relative w-full h-[clamp(320px,55dvh,520px)] overflow-hidden">
         <Navbar visible={true}>
           <NavigationPanel />
         </Navbar>
@@ -73,18 +55,22 @@ export default function MerchPage() {
 
       {/* PRODUCT GRID */}
       <div
-        className="
+        className={`
     w-full px-4 sm:px-6 md:px-10
     grid
-    grid-cols-2
-    sm:grid-cols-2
-    md:grid-cols-3
-    lg:grid-cols-4
     gap-y-14
     gap-x-6
     justify-items-center
     mb-28
-  "
+    ${products.length === 1
+            ? "grid-cols-1 place-items-center"
+            : products.length === 2
+              ? "grid-cols-1 sm:grid-cols-2"
+              : products.length === 3
+                ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                : "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+          }
+  `}
       >
         {products.map((product, i) => (
           <div
@@ -114,7 +100,7 @@ export default function MerchPage() {
         font-jqka
       "
               >
-                {product.name.split(" ").slice(0, 1).join(" ")}’26 <br />
+                {product.name.split(" ").slice(0, 1).join(" ")}'26 <br />
                 {product.name.split(" ").slice(1).join(" ")}
               </p>
 

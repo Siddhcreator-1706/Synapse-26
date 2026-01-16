@@ -11,50 +11,8 @@ const PRODUCTS = [
   {
     slug: "synapse-tee-1",
     name: "Synapse’26 Exclusive Tee",
-    price: 500,
-    image: "/images_merch/Rectangle 90.png",
-    sizes: ["S", "M", "L", "XL", "2XL"],
-    note: "* Merch should be collected from the help desk on the day of fest.",
-    features: [
-      "100% Preshrunk Cotton",
-      "6.0 OZ. Garment Dyed-Fabric",
-      "Relaxed Unisex T-shirt",
-      "Screen Printed",
-    ],
-  },
-  {
-    slug: "synapse-tee-2",
-    name: "Synapse’26 Exclusive Hoodie",
-    price: 500,
-    image: "/images_merch/Rectangle 91.png",
-    sizes: ["S", "M", "L", "XL", "2XL"],
-    note: "* Merch should be collected from the help desk on the day of fest.",
-    features: [
-      "100% Preshrunk Cotton",
-      "6.0 OZ. Garment Dyed-Fabric",
-      "Relaxed Unisex T-shirt",
-      "Screen Printed",
-    ],
-  },
-  {
-    slug: "synapse-tee-3",
-    name: "Synapse’26 Exclusive Cap",
-    price: 500,
-    image: "/images_merch/Rectangle 90-2.png",
-    sizes: ["S", "M", "L", "XL"],
-    note: "* Merch should be collected from the help desk on the day of fest.",
-    features: [
-      "100% Preshrunk Cotton",
-      "6.0 OZ. Garment Dyed-Fabric",
-      "Relaxed Unisex T-shirt",
-      "Screen Printed",
-    ],
-  },
-  {
-    slug: "synapse-tee-4",
-    name: "Synapse’26 Exclusive Tee",
-    price: 500,
-    image: "/images_merch/Rectangle 91-2.png",
+    price: 400,
+    image: "/images_merch/Tshirt.jpeg",
     sizes: ["S", "M", "L", "XL", "2XL"],
     note: "* Merch should be collected from the help desk on the day of fest.",
     features: [
@@ -78,9 +36,11 @@ export default function ProductPage() {
   // placeholder thumbnails (same image for now)
   const images = [product.image, product.image, product.image];
 
-    return (
-        <div className="w-full bg-black text-white min-h-[100dvh] pt-20">
-
+  return (
+    <div className="w-full bg-black text-white min-h-[100dvh] pt-20">
+      <Navbar visible={true}>
+        <NavigationPanel />
+      </Navbar>
       {/* BREADCRUMB */}
       <div className="text-sm px-4 md:px-6 mb-4 flex items-center gap-2 flex-wrap">
         <Link
@@ -132,11 +92,10 @@ export default function ProductPage() {
                         flex-shrink-0
                         w-14 h-14 md:w-16 md:h-16 p-1
                         border rounded-md overflow-hidden transition-all duration-200
-                        ${
-                          isActive
-                            ? "border-white opacity-100 ring-1 ring-white/50"
-                            : "border-white/20 opacity-60 hover:opacity-100 hover:border-white/50"
-                        }
+                        ${isActive
+                      ? "border-white opacity-100 ring-1 ring-white/50"
+                      : "border-white/20 opacity-60 hover:opacity-100 hover:border-white/50"
+                    }
                     `}
                 >
                   <img
@@ -193,11 +152,10 @@ export default function ProductPage() {
                     onClick={() => setSelectedSize(s)}
                     className={`
                                     px-4 py-2 border cursor-pointer transition-all duration-200 min-w-[3rem]
-                                    ${
-                                      isSelected
-                                        ? "bg-white text-black border-white"
-                                        : "border-white/30 text-white hover:border-white"
-                                    }
+                                    ${isSelected
+                        ? "bg-white text-black border-white"
+                        : "border-white/30 text-white hover:border-white"
+                      }
                                 `}
                   >
                     {s}
