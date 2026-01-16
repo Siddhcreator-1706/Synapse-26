@@ -114,7 +114,6 @@ RAZORPAY_KEY_SECRET=...
 ### Third-party Services & Libraries
 
 - Supabase for authentication and data
-- Razorpay for payments
 - GSAP and `react-three` libraries for animations and 3D visuals
 
 ### Building for Production
