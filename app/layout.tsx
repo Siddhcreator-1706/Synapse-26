@@ -10,7 +10,6 @@ import {
 } from "next/font/google";
 import { SmoothScroller } from "@/components/ui/SmoothScroller";
 import Script from "next/script";
-import { VoidCursor } from "@/components/ui/VoidCursor";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -83,7 +82,6 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${bebasNeue.variable} ${inter.variable} ${roboto.variable} ${poppins.variable} antialiased bg-black`}
       >
-        <VoidCursor />
         <SmoothScroller>{children}</SmoothScroller>
         <Analytics />
       </body>
