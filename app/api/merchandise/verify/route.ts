@@ -49,21 +49,11 @@ export async function POST(request: Request) {
         // Create order record
         const orderData = {
             customer_id: user_id || "guest",
-            items: [
-                {
-                    product_id,
-                    product: product?.product_name || "Unknown Product",
-                    size,
-                    quantity,
-                    price: product?.price || amount / 100 / quantity,
-                },
-            ],
+            items: quantity, // Store the quantity as item count
             amount: amount / 100, // Convert from paise to rupees
             order_date: new Date().toISOString(),
-            payment_status: "Paid",
+            payment_status: "done" as const, // Use the enum value from schema
             payment_method: "Razorpay",
-            razorpay_order_id,
-            razorpay_payment_id,
         };
 
         const { data: order, error } = await supabase

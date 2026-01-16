@@ -44,6 +44,14 @@ export async function POST(request: Request) {
             );
         }
 
+        // Validate product price
+        if (product.price === null || product.price === undefined) {
+            return NextResponse.json(
+                { error: "Product price not available" },
+                { status: 400 }
+            );
+        }
+
         // Calculate total amount
         const totalAmount = product.price * quantity;
         const amountInPaise = totalAmount * 100;
