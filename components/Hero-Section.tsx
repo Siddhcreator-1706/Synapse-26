@@ -554,7 +554,7 @@ export default function HeroSection({
           ease: "none",
         },
         "together2"
-      )
+      ).to({}, { duration: 5, ease: "none" });
   }, []);
 
   const initScrollProgress = useCallback(() => {

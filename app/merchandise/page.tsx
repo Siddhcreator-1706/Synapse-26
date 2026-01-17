@@ -33,7 +33,7 @@ export default function MerchPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/95" />
 
         <img
-          src="/images_merch/group 27.png"
+          src="/images_merch/Group 27.png"
           alt="Wear the Realm"
           className="
       absolute z-30

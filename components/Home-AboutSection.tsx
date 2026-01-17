@@ -186,10 +186,10 @@ export default function AboutSection() {
   return (
     <section
       ref={aboutSectionRef}
-      className="part3_end relative min-h-[100svh] w-full
+      className="part3_end relative min-h-[100vh] w-full
                     flex flex-col
                     px-[clamp(1.5rem,4vw,3.75rem)]
-                    py-[clamp(1.2rem,5vh,5rem)]
+                    py-[clamp(1.2rem,5svh,5rem)]
                     overflow-hidden justify-evenly"
       style={{
         background: `linear-gradient(

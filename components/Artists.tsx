@@ -70,6 +70,14 @@ export default function ArtistsSection() {
         fallback: "/images_home/RaviGupta.jpg",
       },
     },
+    {
+      name: "Aditya Gadhvi",
+      date: "10 Jan 2026",
+      image: {
+        avif: "/images_home/AdityaGadhvi.avif",
+        fallback: "/images_home/AdityaGadhvi.jpeg",
+      },
+    },
   ]);
 
   const artistSectionRef = useRef<HTMLDivElement>(null);
@@ -253,7 +261,7 @@ export default function ArtistsSection() {
 
   return (
     <div
-      className="artists-section relative bg-black overflow-hidden"
+      className="artists-section relative bg-black overflow-x-clip"
       id="artistsSection"
       ref={artistSectionRef}
       style={{
@@ -281,7 +289,7 @@ export default function ArtistsSection() {
         </svg>
 
         {/* Title at top */}
-        <div className="flex-shrink-0 pt-6 sm:pt-8 pb-4">
+        <div className="flex-shrink-0 pt-1 pb-12">
           <h1
             id="artistsTitle"
             className="font-joker text-[clamp(2.5rem,10vw,6rem)] px-8 leading-none text-white lowercase text-center"
@@ -333,7 +341,7 @@ export default function ArtistsSection() {
                     style={{
                       width:
                         i === currentIndex
-                          ? "clamp(180px, 45vw, 480px)"
+                          ? "clamp(200px, 50vw, 480px)"
                           : "clamp(120px, 25vw, 230px)",
                       height:
                         i === currentIndex
@@ -361,7 +369,7 @@ export default function ArtistsSection() {
             style={{
               width: "clamp(32px, 6vw, 62px)",
               height: "clamp(28px, 5vw, 54px)",
-              left: "calc(clamp(180px, 45vw, 480px)/2 + 50%)",
+              left: "calc(clamp(200px, 50vw, 480px)/2 + 50%)",
             }}
             aria-label="Next artist"
           >
@@ -393,7 +401,7 @@ export default function ArtistsSection() {
             style={{
               width: "clamp(32px, 6vw, 62px)",
               height: "clamp(28px, 5vw, 54px)",
-              right: "calc(clamp(180px, 45vw, 480px)/2 + 50%)",
+              right: "calc(clamp(200px, 50vw, 480px)/2 + 50%)",
             }}
             aria-label="Previous artist"
           >

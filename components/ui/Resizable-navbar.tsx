@@ -176,22 +176,21 @@ export const MobileAnimatedMenuItem = ({
   onClick,
 }: AnimatedMenuItemProps) => {
   const movedRef = React.useRef(false);
+
   return (
     <Link
       href={link}
-      className="group w-full grid grid-cols-[1fr_auto] items-center cursor-pointer select-none text-white font-joker"
+      onClickCapture={(e) => {
+        if (movedRef.current) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }}
       onTouchStart={() => {
         movedRef.current = false;
       }}
       onTouchMove={() => {
         movedRef.current = true;
-      }}
-      onTouchEnd={(e) => {
-        if (movedRef.current) {
-          e.preventDefault();
-          e.stopPropagation();
-          return;
-        }
       }}
       onClick={(e) => {
         if (movedRef.current) {
@@ -201,57 +200,25 @@ export const MobileAnimatedMenuItem = ({
         }
         onClick?.(e);
       }}
+      className="group w-full grid grid-cols-[1fr_auto] items-center cursor-pointer select-none text-white font-joker"
     >
       {/* TEXT */}
       <div className="relative overflow-hidden h-[clamp(32px,7vw,64px)]">
-        {/* DEFAULT */}
-        <span
-          className="
-            absolute inset-0
-            translate-y-0
-            transition-transform duration-500 ease-out
-            group-hover:-translate-y-full
-            text-[clamp(18px,4.5vw,42px)]
-            leading-[clamp(32px,7vw,64px)]
-            group-hover:text-[#EB0000]
-            font-joker
-          "
-        >
+        <span className="absolute inset-0 transition-transform duration-500 ease-out group-hover:-translate-y-full text-[clamp(18px,4.5vw,42px)] leading-[clamp(32px,7vw,64px)] font-joker">
           {name}
         </span>
-
-        {/* HOVER */}
-        <span
-          className="
-            absolute inset-0
-            translate-y-full
-            transition-transform duration-500 ease-out
-            group-hover:translate-y-0
-            text-[clamp(18px,4.5vw,42px)]
-            leading-[clamp(32px,7vw,64px)]
-            group-hover:text-[#EB0000]
-            font-joker
-          "
-        >
+        <span className="absolute inset-0 translate-y-full transition-transform duration-500 ease-out group-hover:translate-y-0 text-[clamp(18px,4.5vw,42px)] leading-[clamp(32px,7vw,64px)] font-joker">
           {name}
         </span>
       </div>
 
-      {/* ARROW */}
-      <span
-        className="
-          ml-[clamp(8px,1.5vw,16px)]
-          text-[clamp(20px,5vw,48px)]
-          transition-all duration-300 ease-out
-          group-hover:translate-x-1.5
-          group-hover:text-[#EB0000]
-        "
-      >
+      <span className="ml-[clamp(8px,1.5vw,16px)] text-[clamp(20px,5vw,48px)] transition-all duration-300 ease-out group-hover:translate-x-1.5">
         ↗
       </span>
     </Link>
   );
 };
+
 
 export const MobileNavHeader = ({
   children,
