@@ -72,8 +72,8 @@ export default function NewArtistPage() {
       if (data.error) throw new Error(data.error);
       alert("Artist created successfully!");
       router.push("/admin/artists");
-    } catch (err: any) {
-      alert("Failed to create artist: " + err.message);
+    } catch (err: unknown) {
+      alert("Failed to create artist: " + (err instanceof Error ? err.message : 'Failed to create artist'));
     } finally {
       setLoading(false);
     }

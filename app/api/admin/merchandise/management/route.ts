@@ -1,5 +1,6 @@
-import { createClient } from "@/utils/supabase/server";
-import { NextRequest, NextResponse } from "next/server";
+import { createClient } from '@/utils/supabase/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { uploadImage } from '@/lib/imageUtil';
 
 async function checkAdmin(supabase: any) {
   const {
@@ -44,27 +45,43 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 
-    const body = await request.json();
+    const formData = await request.formData();
 
-    if (!body.product_name || body.price === undefined) {
+    const product_name = formData.get('product_name') as string;
+    const price = formData.get('price') as string;
+    const available_sizes = formData.get('available_sizes') as string | null;
+    const description = formData.get('description') as string | null;
+    const is_available = formData.get('is_available') as string | null;
+    const imageFile = formData.get('image') as File | null;
+
+    if (!product_name || price === null) {
       return NextResponse.json(
         { error: "product_name and price are required" },
         { status: 400 }
       );
     }
 
+    let product_image = null;
+
+    // Upload image if provided
+    if (imageFile && imageFile.size > 0) {
+      const uploadResult = await uploadImage({
+        file: imageFile,
+        bucket: 'synapse',
+        folder: 'merchandise'
+      });
+      product_image = uploadResult.publicUrl;
+    }
+
     const { data: product, error } = await supabase
       .from("merchandise_management")
       .insert({
-        product_name: body.product_name,
-        price: body.price,
-        available_sizes: Array.isArray(body.available_sizes)
-          ? body.available_sizes
-          : null,
-        product_image: body.product_image || null,
-        description: body.description || null,
-        is_available:
-          body.is_available !== undefined ? !!body.is_available : true,
+        product_name,
+        price: Number(price),
+        available_sizes: available_sizes ? JSON.parse(available_sizes) : null,
+        product_image,
+        description: description || null,
+        is_available: is_available !== null ? is_available === 'true' : true,
       })
       .select()
       .single();

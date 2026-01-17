@@ -58,8 +58,8 @@ export default function ArtistsPage() {
       const data = await res.json();
       if (data.error) throw new Error(data.error);
       setArtists(data || []);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch artists');
     } finally {
       setLoading(false);
     }
@@ -85,8 +85,8 @@ export default function ArtistsPage() {
       const data = await res.json();
       if (data.error) throw new Error(data.error);
       await fetchArtists();
-    } catch (err: any) {
-      alert("Failed to delete: " + err.message);
+    } catch (err: unknown) {
+      alert("Failed to delete: " + (err instanceof Error ? err.message : 'Failed to delete artist'));
     } finally {
       setDeleteDialogOpen(false);
       setDeletingId(null);

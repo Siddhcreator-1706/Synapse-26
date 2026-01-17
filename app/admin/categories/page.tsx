@@ -51,8 +51,8 @@ export default function CategoriesPage() {
       const data = await res.json();
       if (data.error) throw new Error(data.error);
       setCategories(data.categories || []);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch categories');
     } finally {
       setLoading(false);
     }
@@ -96,8 +96,8 @@ export default function CategoriesPage() {
       setFormData({ name: "", description: "" });
       setPreviewImage(null);
       setEditingId(null);
-    } catch (err: any) {
-      alert("Failed to save: " + err.message);
+    } catch (err: unknown) {
+      alert("Failed to save: " + (err instanceof Error ? err.message : 'Unknown error'));
     } finally {
       setSubmitting(false);
     }
@@ -121,8 +121,8 @@ export default function CategoriesPage() {
       const data = await res.json();
       if (data.error) throw new Error(data.error);
       await fetchCategories();
-    } catch (err: any) {
-      alert("Failed to delete: " + err.message);
+    } catch (err: unknown) {
+      alert("Failed to delete: " + (err instanceof Error ? err.message : 'Unknown error'));
     } finally {
       setDeleteDialogOpen(false);
       setDeletingId(null);

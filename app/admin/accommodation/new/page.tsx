@@ -46,8 +46,8 @@ export default function NewAccommodationPage() {
       if (data.error) throw new Error(data.error);
       alert("Package created successfully!");
       router.push("/admin/accommodation");
-    } catch (err: any) {
-      alert("Failed to create: " + err.message);
+    } catch (err: unknown) {
+      alert("Failed to create: " + (err instanceof Error ? err.message : 'Failed to create package'));
     } finally {
       setLoading(false);
     }

@@ -58,8 +58,8 @@ export default function AccommodationPage() {
       const data = await res.json();
       if (data.error) throw new Error(data.error);
       setAccommodations(data.packages || []);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch accommodations');
     } finally {
       setLoading(false);
     }
@@ -81,8 +81,8 @@ export default function AccommodationPage() {
       const data = await res.json();
       if (data.error) throw new Error(data.error);
       await fetchAccommodations();
-    } catch (err: any) {
-      alert("Failed to delete: " + err.message);
+    } catch (err: unknown) {
+      alert("Failed to delete: " + (err instanceof Error ? err.message : 'Failed to delete accommodation'));
     } finally {
       setDeleteDialogOpen(false);
       setDeletingId(null);

@@ -41,8 +41,8 @@ export default function EditAccommodationPage() {
           description: pkg.description || "",
           is_available: pkg.is_available ?? true,
         });
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : 'Failed to fetch accommodation');
       } finally {
         setLoading(false);
       }
@@ -75,8 +75,8 @@ export default function EditAccommodationPage() {
       if (data.error) throw new Error(data.error);
       alert("Package updated successfully!");
       router.push("/admin/accommodation");
-    } catch (err: any) {
-      alert("Failed to update: " + err.message);
+    } catch (err: unknown) {
+      alert("Failed to update: " + (err instanceof Error ? err.message : 'Failed to update package'));
     } finally {
       setSaving(false);
     }

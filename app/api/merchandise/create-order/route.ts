@@ -44,7 +44,8 @@ export async function POST(request: Request) {
             );
         }
 
-        if (product.price === null) {
+        // Validate product price
+        if (product.price === null || product.price === undefined) {
             return NextResponse.json(
                 { error: "Product price not available" },
                 { status: 400 }
