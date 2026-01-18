@@ -47,7 +47,7 @@ export default function NavigationPanel() {
     return baseItems.filter((item) => item.link !== pathname);
   }, [isAuthenticated, pathname]);
 
-  const handleContactClick = (e: any) => {
+  const handleContactClick = (e: React.MouseEvent) => {
     e.preventDefault();
     setMobileMenuOpen(false);
 

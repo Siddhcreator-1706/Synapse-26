@@ -83,8 +83,12 @@ export default function RegisterBox({ goLogin, goOtp }: RegisterBoxProps) {
 
       // Move to OTP verification screen
       goOtp(formData.email);
-    } catch (err: any) {
-      setError(err.message || "An error occurred during registration");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An error occurred during registration");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -185,7 +189,10 @@ export default function RegisterBox({ goLogin, goOtp }: RegisterBoxProps) {
                   if (dobRef.current) {
                     dobRef.current.type = "date";
                     dobRef.current.focus();
-                    (dobRef.current as any).showPicker?.();
+                    dobRef.current.focus();
+                    if ("showPicker" in dobRef.current) {
+                      (dobRef.current as HTMLInputElement & { showPicker: () => void }).showPicker();
+                    }
                   }
                 }}
                 className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500 cursor-pointer hover:text-white transition-colors"

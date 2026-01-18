@@ -7,7 +7,7 @@ interface SmoothScrollerProps {
 }
 
 export function SmoothScroller({ children }: SmoothScrollerProps) {
-  const lenisRef = useRef<any>(null);
+  const lenisRef = useRef<unknown>(null);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -56,7 +56,7 @@ export function SmoothScroller({ children }: SmoothScrollerProps) {
 
     return () => {
       if (lenisRef.current) {
-        lenisRef.current.destroy();
+        (lenisRef.current as { destroy: () => void }).destroy();
       }
     };
   }, [isMounted]);

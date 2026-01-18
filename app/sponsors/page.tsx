@@ -2,8 +2,7 @@ import HeroSection from "@/components/Hero-Section-Sponsors";
 import SponsorTier from "@/components/SponsorTier";
 import Footer from "@/components/ui/Footer";
 
-import { useNavigationState } from "@/lib/useNavigationState";
-import { useEffect } from "react";
+
 
 export default function SponsorsPage() {
   // Manual transition end moved to global TransitionProvider

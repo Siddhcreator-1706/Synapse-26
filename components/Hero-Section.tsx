@@ -83,10 +83,12 @@ export default function HeroSection({
     pending: new Set<string>(),
     resolved: new Set<string>(),
   });
-  const masterTLRef = useRef<any>(null);
-  const progressTriggerRef = useRef<any>(null);
-  const scrollHintIdleRef = useRef<any>(null);
-  const scrollHintHomeIdleRef = useRef<any>(null);
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  // Disabling explicit-any for GSAP refs temporarily due to complex types
+  const masterTLRef = useRef<gsap.core.Timeline | null>(null);
+  const progressTriggerRef = useRef<ScrollTrigger | null>(null);
+  const scrollHintIdleRef = useRef<gsap.core.Tween | null>(null);
+  const scrollHintHomeIdleRef = useRef<gsap.core.Tween | null>(null);
   const rafIdRef = useRef<number | null>(null);
 
   const updateProgressText = useCallback((progress: number) => {
@@ -134,7 +136,7 @@ export default function HeroSection({
         const len = p.getTotalLength();
         p.style.strokeDasharray = `${len}`;
         p.style.strokeDashoffset = `${len}`;
-        (p as any).dataset.len = len;
+        (p as SVGPathElement & { dataset: { len: string } }).dataset.len = String(len);
         p.style.opacity = "1";
       });
     }
@@ -217,7 +219,7 @@ export default function HeroSection({
       (target - assetsRef.current.strokeProgress) * ease;
 
     assetsRef.current.paths.forEach((p) => {
-      p.style.strokeDashoffset = `${Number((p as any).dataset.len) * (1 - assetsRef.current.strokeProgress)
+      p.style.strokeDashoffset = `${Number((p as SVGPathElement & { dataset: { len: string } }).dataset.len) * (1 - assetsRef.current.strokeProgress)
         }`;
     });
 
@@ -709,7 +711,7 @@ export default function HeroSection({
 
         // kill all ScrollTriggers
         if (typeof ScrollTrigger !== "undefined" && ScrollTrigger.getAll) {
-          ScrollTrigger.getAll().forEach((st: any) => st.kill());
+          ScrollTrigger.getAll().forEach((st: ScrollTrigger) => st.kill());
         }
 
         // kill all tweens on important refs

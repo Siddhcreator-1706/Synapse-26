@@ -107,8 +107,12 @@ export default function OtpBox({
           router.push("/user-profile");
         }
       }, 1500);
-    } catch (err: any) {
-      setError(err.message || "An error occurred during verification");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An error occurred during verification");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -140,8 +144,12 @@ export default function OtpBox({
       setSuccess("Verification code resent successfully!");
       setOtp(["", "", "", "", "", ""]);
       inputRefs.current[0]?.focus();
-    } catch (err: any) {
-      setError(err.message || "Failed to resend verification code");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Failed to resend verification code");
+      }
     } finally {
       setIsResending(false);
     }

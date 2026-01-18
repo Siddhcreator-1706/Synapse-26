@@ -214,9 +214,9 @@ export const registrationsApi = {
     },
 
     getGatewaySettings: () =>
-        apiFetch<{ gateways: any[] }>("/api/admin/registrations/gateway"),
+        apiFetch<{ gateways: unknown[] }>("/api/admin/registrations/gateway"),
 
-    updateGatewaySettings: (payload: any) =>
+    updateGatewaySettings: (payload: unknown) =>
         apiFetch("/api/admin/registrations/gateway", {
             method: "PUT",
             body: JSON.stringify(payload),
@@ -397,7 +397,7 @@ export type MerchandiseProduct = {
 export type MerchandiseOrder = {
     order_id: number;
     customer_id: string;
-    items: any;
+    items: unknown;
     amount: number;
     order_date: string;
     payment_status: string;

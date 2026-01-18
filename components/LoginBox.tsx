@@ -47,8 +47,12 @@ export default function LoginBox({ goRegister, goForgot }: LoginBoxProps) {
         router.push("/");
       }
       router.refresh();
-    } catch (err: any) {
-      setError(err.message || "An error occurred during login");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An error occurred during login");
+      }
     } finally {
       setIsLoading(false);
     }
