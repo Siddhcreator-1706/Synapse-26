@@ -70,7 +70,20 @@ const schedule: DaySchedule[] = [
       { name: "Q&A Session", time: "12:00 PM - 1:00 PM", venue: "Auditorium" },
     ],
   },
+  {
+    day: 4,
+    events: [
+      { name: "Battledrome", time: "8:00 AM - 9:00 AM", venue: "Café Lounge" },
+      {
+        name: "Advanced Workshop",
+        time: "9:30 AM - 11:30 AM",
+        venue: "Studio 5",
+      },
+      { name: "Q&A Session", time: "12:00 PM - 1:00 PM", venue: "Auditorium" },
+    ],
+  },
 ];
+
 
 /* =======================
    COMPONENT

@@ -821,9 +821,14 @@ export default function HeroSection({
 
       <div
         ref={scrollTrackRef}
-        className="fixed right-[24px] top-1/2 -translate-y-1/2 z-[9999]
-               h-[300px] w-[10px] rounded-full border border-solid border-gray-700
-               bg-gray-200 pointer-events-none transition duration-500"
+        className="
+    fixed right-[12px] md:right-[24px]
+    top-1/2 -translate-y-1/2 z-[9999]
+    h-[180px] md:h-[300px]
+    w-[5px] md:w-[10px]
+    rounded-full border border-solid border-gray-700
+    bg-gray-200 pointer-events-none transition duration-500
+  "
         style={{
           opacity: showNavbar ? 1 : 0,
         }}

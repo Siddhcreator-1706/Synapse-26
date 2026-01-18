@@ -49,11 +49,16 @@ export function CountdownTimer({ targetDate }: CountdownTimerProps) {
 
   return (
     <div
-      className="left-1/2 -translate-x-1/2
+      className="
     countdown absolute
-    bottom-[clamp(40px,7vw,55px)]
+    left-1/2 -translate-x-1/2
+
+    bottom-[90px]
+    sm:bottom-[clamp(40px,7vw,55px)]
+
     min-[450px]:left-[clamp(20px,5vw,50px)]
     min-[450px]:translate-x-0
+
     flex
     gap-[clamp(12px,4vw,36px)]
   "

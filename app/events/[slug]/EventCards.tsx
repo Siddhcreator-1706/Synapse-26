@@ -51,7 +51,7 @@ export default function EventCards({ cards }: { cards: EventCard[] }) {
                     w-full h-[52px]
                     bg-white text-black
                     flex items-center justify-center gap-2
-                    hover:bg-[#b41c32] hover:text-white
+                    hover:bg-[#b41c32] hover:text-white font-jqka
                     transition-all duration-150 rounded-sm cursor-pointer
                   "
                 >

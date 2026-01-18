@@ -34,9 +34,9 @@ export default function NavigationPanel() {
 
     // Add "My Profile" or "Register" based on auth state
     if (isAuthenticated) {
-      baseItems.push({ name: "my profile", link: "/user-profile" });
+      baseItems.unshift({ name: "my profile", link: "/user-profile" });
     } else {
-      baseItems.push({ name: "register", link: "/auth" });
+      baseItems.unshift({ name: "register", link: "/auth" });
     }
 
     return baseItems;
