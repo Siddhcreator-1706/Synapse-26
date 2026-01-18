@@ -823,7 +823,7 @@ export default function HeroSection({
         ref={scrollTrackRef}
         className="
     fixed right-[12px] md:right-[24px]
-    top-1/2 -translate-y-1/2 z-[9999]
+    top-1/2 -translate-y-1/2 z-[999]
     h-[180px] md:h-[300px]
     w-[5px] md:w-[10px]
     rounded-full border border-solid border-gray-700
@@ -835,7 +835,7 @@ export default function HeroSection({
       >
         <div
           ref={scrollFillRef}
-          className="absolute top-0 left-0 w-full h-0 z-[9999]
+          className="absolute top-0 left-0 w-full h-0 z-[9990]
                    bg-red-600 rounded-full"
         />
       </div>

@@ -2,7 +2,13 @@ import HeroSection from "@/components/Hero-Section-Sponsors";
 import SponsorTier from "@/components/SponsorTier";
 import Footer from "@/components/ui/Footer";
 
+import { useNavigationState } from "@/lib/useNavigationState";
+import { useEffect } from "react";
+
 export default function SponsorsPage() {
+  // Manual transition end moved to global TransitionProvider
+  // const { endTransition } = useNavigationState();
+  // useEffect(() => { ... }, []);
   // Tier Data
   const tierTitle = Array(2).fill({ name: "Name" });
   const tierGov = Array(8).fill({ name: "Name" });

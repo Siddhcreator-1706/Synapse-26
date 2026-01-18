@@ -5,6 +5,7 @@ import Footer from "@/components/ui/Footer";
 import { Navbar } from "@/components/ui/Resizable-navbar";
 import Image from "next/image";
 
+
 export default function About() {
   return (
     <>

@@ -5,7 +5,11 @@ import Footer from "@/components/ui/Footer";
 import { Navbar } from "@/components/ui/Resizable-navbar";
 import NavigationPanel from "@/components/ui/NavigationPanel";
 
+import { useNavigationState } from "@/lib/useNavigationState";
+import { useEffect } from "react";
+
 export default function MerchPage() {
+
   const products = [
     {
       slug: "synapse-tee-1",

@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useNavigationState } from "@/lib/useNavigationState";
 import Image from "next/image";
 import { Navbar } from "@/components/ui/Resizable-navbar";
 import NavigationPanel from "@/components/ui/NavigationPanel";
@@ -12,45 +13,35 @@ import { EVENT_PAGES, EventCard } from "../eventcontent";
 export default function EventPage() {
     const params = useParams();
     const router = useRouter();
+    // derived synchronously
     const slug = params?.slug as string;
     const eventNameSlug = params?.eventName as string;
 
-    const [event, setEvent] = useState<EventCard | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    // Manual Transition Control moved to global provider
+    // const { endTransition } = useNavigationState();
 
-    useEffect(() => {
-        if (!slug || !eventNameSlug) return;
+    // useEffect(() => {
+    //     endTransition();
+    // }, []);
 
-        // 1. Get Category Config
+    // Direct lookup
+    let event: EventCard | null = null;
+    let error: string | null = null;
+
+    if (slug && eventNameSlug) {
         const categoryData = EVENT_PAGES[slug];
         if (!categoryData) {
-            setError("Category not found.");
-            setLoading(false);
-            return;
-        }
-
-        // 2. Find Event in Category
-        // Compare slugs: "Battle of Bands" -> "battle-of-bands"
-        const foundEvent = categoryData.cards.find(card =>
-            card.name.toLowerCase().replace(/\s+/g, "-") === eventNameSlug
-        );
-
-        if (!foundEvent) {
-            setError("Event not found.");
+            error = "Category not found.";
         } else {
-            setEvent(foundEvent);
+            const foundEvent = categoryData.cards.find(card =>
+                card.name.toLowerCase().replace(/\s+/g, "-") === eventNameSlug
+            );
+            if (!foundEvent) {
+                error = "Event not found.";
+            } else {
+                event = foundEvent;
+            }
         }
-        setLoading(false);
-
-    }, [slug, eventNameSlug]);
-
-    if (loading) {
-        return (
-            <div className="min-h-screen bg-black text-white flex items-center justify-center font-joker text-2xl">
-                Loading...
-            </div>
-        );
     }
 
     if (error || !event) {
@@ -72,7 +63,7 @@ export default function EventPage() {
             </Navbar>
 
             {/* HEADER IMAGE / BACKGROUND */}
-            <div className="relative w-full h-[60dvh] flex items-end justify-center pb-10">
+            <div className="relative w-full h-[60dvh] flex items-center justify-center">
                 <Image
                     src={event.image}
                     alt={event.name}
@@ -82,8 +73,8 @@ export default function EventPage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
 
-                <div className="relative z-10 text-center px-4">
-                    <h1 className="font-joker lowercase text-6xl md:text-8xl lg:text-9xl tracking-wider text-white mb-4 drop-shadow-lg">
+                <div className="relative z-10 text-center px-4 mt-10">
+                    <h1 className="font-joker lowercase text-5xl md:text-7xl lg:text-9xl tracking-wider text-white mb-4 drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)] animate-fadeIn">
                         {event.name}
                     </h1>
                 </div>

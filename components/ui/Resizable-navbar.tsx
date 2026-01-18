@@ -9,6 +9,7 @@ import {
 } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { useNavigationState } from "@/lib/useNavigationState";
 
 import React, { useRef, useState, forwardRef } from "react";
 
@@ -63,12 +64,12 @@ export const Navbar = ({
 }: NavbarProps & { visible?: boolean }) => {
   return (
     <motion.div
-      className={cn("fixed inset-x-0 top-0 z-40 w-full", className)}
+      className={cn("fixed z-9990 inset-x-0 top-0 z-40 w-full", className)}
       initial={false}
       animate={{
         opacity: visible ? 1 : 0,
         y: visible ? 0 : -80,
-        pointerEvents: visible ? "auto" : "none",
+        pointerEvents: "none",
       }}
       transition={{ duration: 0.3, ease: "easeOut" }}
     >
@@ -97,7 +98,7 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
         minWidth: "800px",
       }}
       className={cn(
-        "relative z-[150] mx-auto hidden w-full max-w-[95vw] flex-row items-center justify-between self-start rounded-full bg-black/40 px-6 py-3 lg:flex border border-white/10",
+        "relative z-[150] mx-auto hidden w-full max-w-[95vw] flex-row items-center justify-between self-start rounded-full bg-black/40 px-6 py-3 lg:flex border border-white/10 pointer-events-auto",
         visible && "bg-black/80",
         className
       )}
@@ -109,19 +110,26 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
 
 export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
   const [hovered, setHovered] = useState<number | null>(null);
+  const { startTransition } = useNavigationState();
 
   return (
     <motion.div
       onMouseLeave={() => setHovered(null)}
       className={cn(
-        "absolute inset-0 hidden flex-1 flex-row items-center justify-center space-x-2 text-sm font-medium text-white/90 transition duration-200 lg:flex lg:space-x-2",
+        "absolute inset-0 hidden flex-1 flex-row items-center justify-center space-x-2 text-sm font-medium text-white/90 transition duration-200 lg:flex lg:space-x-2 pointer-events-auto",
         className
       )}
     >
       {items.map((item, idx) => (
         <Link
           onMouseEnter={() => setHovered(idx)}
-          onClick={onItemClick}
+          onClick={(e) => {
+            // Only for internal links
+            if (item.link.startsWith("/")) {
+              startTransition();
+            }
+            onItemClick?.();
+          }}
           className="relative px-4 py-2 text-white/80 hover:text-white transition-colors duration-200"
           key={`link-${idx}`}
           href={item.link}
@@ -153,6 +161,7 @@ export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
         paddingRight: visible ? "12px" : "0px",
         paddingLeft: visible ? "12px" : "0px",
         y: visible ? 20 : 0,
+        pointerEvents: "none",
       }}
       transition={{
         type: "spring",
@@ -160,7 +169,7 @@ export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
         damping: 50,
       }}
       className={cn(
-        "relative z-50 mx-auto flex w-full flex-col items-center justify-between px-4",
+        "relative z-50 z-9990 mx-auto flex w-full flex-col items-center justify-between px-4",
         visible,
         className
       )}
@@ -200,7 +209,7 @@ export const MobileAnimatedMenuItem = ({
         }
         onClick?.(e);
       }}
-      className="group w-full grid grid-cols-[1fr_auto] items-center cursor-pointer select-none text-white font-joker"
+      className="group w-full grid grid-cols-[1fr_auto] items-center cursor-pointer select-none text-white font-joker hover:text-red-600"
     >
       {/* TEXT */}
       <div className="relative overflow-hidden h-[clamp(32px,7vw,64px)]">
@@ -227,7 +236,7 @@ export const MobileNavHeader = ({
   return (
     <div
       className={cn(
-        "flex w-full z-9999 px-4 py-4 flex-row items-center justify-between",
+        "flex w-full z-9990 px-4 py-4 flex-row items-center justify-between pointer-events-none",
         className,
       )}
     >
@@ -255,7 +264,7 @@ export const MobileNavMenu = forwardRef<
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
           className={cn(
-            "fixed inset-x-0 top-2 z-[999] mx-auto w-[calc(100%-16px)] rounded-xl bg-black/95 border border-white/10 shadow-[0_4px_30px_rgba(235,0,0,0.15)]",
+            "fixed inset-x-0 top-2 mx-auto w-[calc(100%-16px)] rounded-xl bg-black/95 border border-white/10 shadow-[0_4px_30px_rgba(235,0,0,0.15)] pointer-events-auto",
             className
           )}
           onWheel={(e) => e.stopPropagation()}
@@ -282,17 +291,20 @@ export const MobileNavToggle = ({
   onClick: () => void;
 }) => {
   return isOpen ? (
-    <IconX size={35} className=" z-9999 text-white cursor-pointer hover:text-[#EB0000] transition-colors" onClick={onClick} />
+    <IconX size={35} className=" z-9999 text-white cursor-pointer hover:text-[#EB0000] transition-colors pointer-events-auto" onClick={onClick} />
   ) : (
-    <IconMenu3 size={35} className=" text-white scale-[0.9] md:scale-[1] cursor-pointer hover:text-[#EB0000] transition-colors" onClick={onClick} />
+    <IconMenu3 size={35} className="z-9999 text-white scale-[0.9] md:scale-[1] cursor-pointer hover:text-[#EB0000] transition-colors pointer-events-auto" onClick={onClick} />
   );
 };
 
 export const NavbarLogo = () => {
+  const { startTransition } = useNavigationState();
+
   return (
     <Link
       href="/"
-      className="relative mr-4 flex items-center space-x-2 px-2 py-1 text-sm font-normal text-black dark:text-white"
+      onClick={() => startTransition()}
+      className="relative mr-4 flex items-center space-x-2 px-2 py-1 text-sm font-normal text-black dark:text-white pointer-events-auto"
     >
       <Image
         src="/Synapse Logo.png"
@@ -347,10 +359,20 @@ export const NavbarButton: React.FC<NavbarButtonProps> = ({
     </button>
   );
 
+  const { startTransition } = useNavigationState();
+
   if (!href) return button;
 
   return (
-    <Link href={href} prefetch>
+    <Link
+      href={href}
+      prefetch
+      onClick={() => {
+        if (href.startsWith("/")) {
+          startTransition();
+        }
+      }}
+    >
       {button}
     </Link>
   );

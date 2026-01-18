@@ -8,9 +8,14 @@ import { EVENT_PAGES } from "./eventcontent";
 import EventCards from "./EventCards";
 import NavigationPanel from "@/components/ui/NavigationPanel";
 
+import { useNavigationState } from "@/lib/useNavigationState";
+
+
 export default function EventDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const page = EVENT_PAGES[slug];
+  const { } = useNavigationState();
+
 
   if (!page) return notFound();
 

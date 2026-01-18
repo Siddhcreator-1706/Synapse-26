@@ -3,13 +3,17 @@
 import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
 import type { EventCard } from "./eventcontent";
+import { useNavigationState } from "@/lib/useNavigationState";
 
 export default function EventCards({ cards }: { cards: EventCard[] }) {
   const router = useRouter();
   const params = useParams();
   const currentSlug = params?.slug as string;
 
+  const { startTransition } = useNavigationState();
+
   const handleRegisterClick = (cardName: string) => {
+    startTransition();
     // Slugify the event name for the URL
     // e.g. "Battle of Bands" -> "battle-of-bands"
     const eventSlug = cardName.toLowerCase().replace(/\s+/g, "-");
@@ -61,6 +65,7 @@ export default function EventCards({ cards }: { cards: EventCard[] }) {
                     bg-white text-black
                     flex items-center justify-center gap-2
                     hover:bg-[#b41c32] hover:text-white font-jqka
+                    text-2xl md:text-3xl
                     transition-all duration-150 rounded-sm cursor-pointer
                   "
                 >

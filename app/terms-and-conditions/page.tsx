@@ -55,7 +55,11 @@ const styles = {
   li: "text-sm sm:text-base lg:text-[25px] leading-relaxed text-[#dddddd] mb-2",
 };
 
+import { useNavigationState } from "@/lib/useNavigationState";
+import { useEffect } from "react";
+
 export default function Terms() {
+  // Manual transition end moved to global TransitionProvider
 
   return (
     <div className="relative w-screen min-h-[100svh] overflow-x-hidden  text-white">

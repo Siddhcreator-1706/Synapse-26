@@ -11,6 +11,7 @@ import {
 import { SmoothScroller } from "@/components/ui/SmoothScroller";
 import Script from "next/script";
 import "./globals.css";
+import TransitionProvider from "@/components/TransitionProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -72,6 +73,10 @@ export const metadata: Metadata = {
   },
 };
 
+
+
+
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -86,7 +91,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${bebasNeue.variable} ${inter.variable} ${roboto.variable} ${poppins.variable} antialiased bg-black`}
       >
-        <SmoothScroller>{children}</SmoothScroller>
+
+        <SmoothScroller>
+          <TransitionProvider>
+            {children}
+          </TransitionProvider>
+        </SmoothScroller>
         <Analytics />
       </body>
     </html>

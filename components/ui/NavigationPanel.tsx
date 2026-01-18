@@ -9,13 +9,17 @@ import {
   NavbarLogo,
   MobileAnimatedMenuItem,
 } from "@/components/ui/Resizable-navbar";
+import { useNavigationState } from "@/lib/useNavigationState";
 import { useAuth } from "@/hooks/useAuth";
+import { usePathname } from "next/navigation";
 
 export default function NavigationPanel() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const menuRef = React.useRef<HTMLDivElement>(null);
   const toggleRef = React.useRef<HTMLDivElement>(null);
   const { isAuthenticated } = useAuth();
+  const { startTransition } = useNavigationState();
+  const pathname = usePathname();
 
   // Dynamic nav items based on auth state
   const navItems = useMemo(() => {
@@ -23,6 +27,7 @@ export default function NavigationPanel() {
       { name: "home", link: "/" },
       { name: "about us", link: "/about" },
       { name: "events", link: "/events" },
+      { name: "teams", link: "/teams" },
       { name: "pronite", link: "/pronite" },
       { name: "timeline", link: "/timeline" },
       { name: "accomodation", link: "/accomodation" },
@@ -39,8 +44,8 @@ export default function NavigationPanel() {
       baseItems.unshift({ name: "register", link: "/auth" });
     }
 
-    return baseItems;
-  }, [isAuthenticated]);
+    return baseItems.filter((item) => item.link !== pathname);
+  }, [isAuthenticated, pathname]);
 
   const handleContactClick = (e: any) => {
     e.preventDefault();
@@ -123,6 +128,10 @@ export default function NavigationPanel() {
                 if (item.isContact) {
                   handleContactClick(e);
                 } else {
+                  // Trigger transition if it's an internal link
+                  if (item.link.startsWith("/")) {
+                    startTransition();
+                  }
                   setMobileMenuOpen(false);
                 }
               }}

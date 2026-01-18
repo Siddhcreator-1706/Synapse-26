@@ -9,8 +9,12 @@ import { Navbar, NavbarButton } from "@/components/ui/Resizable-navbar";
 import NavigationPanel from "@/components/ui/NavigationPanel";
 import { useAuth } from "@/hooks/useAuth";
 
+import { useNavigationState } from "@/lib/useNavigationState";
+
 export default function PronitePage() {
   const { isAuthenticated } = useAuth();
+  // Manual transition end moved to global TransitionProvider
+  useNavigationState();
 
   return (
     <main className="bg-black text-white selection:bg-red-600 selection:text-white">

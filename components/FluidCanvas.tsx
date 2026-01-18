@@ -19,7 +19,7 @@ const FluidCanvas: FC<FluidCanvasProps> = ({ className }) => {
         width: "100vw",
         height: "100vh",
 
-        zIndex: 9999,
+        zIndex: 9990,
         mixBlendMode: "lighten",
         pointerEvents: "none",
       }}
