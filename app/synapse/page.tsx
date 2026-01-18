@@ -9,21 +9,24 @@ import JokerSection from "@/components/Home-JokerSection";
 import ArtistsSection from "@/components/Artists";
 import HallOfFame from "@/components/Home-HallOfFame";
 import Footer from "@/components/ui/Footer";
+import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import NavigationPanel from "@/components/ui/NavigationPanel";
 import { Navbar } from "@/components/ui/Resizable-navbar";
 
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
 // Dynamic import with SSR disabled to prevent "window is not defined" error
 // from @react-three/fiber which accesses window at import time
-// const FluidCanvas = dynamic(() => import("@/components/FluidCanvas"), {
-//   ssr: false,
-// });
+const FluidCanvas = dynamic(() => import("@/components/FluidCanvas"), {
+  ssr: false,
+});
 
 export default function HomeSection() {
   const [entered, setEntered] = useState(false);
   const [showNavbar, setShowNavbar] = useState(false);
-
-  // Refresh GSAP after .end mounts
   useEffect(() => {
     if (entered) {
       requestAnimationFrame(() => {
@@ -32,11 +35,9 @@ export default function HomeSection() {
     }
   }, [entered]);
 
-
   return (
-    <main className="flex flex-col min-h-screen relative">
-      {/* {entered ? <FluidCanvas /> : ""} */}
-      {entered ? "" : ""}
+    <main className="flex flex-col min-h-svh overflow-x-hidden relative">
+      {entered ? <FluidCanvas /> : ""}
       <Navbar visible={showNavbar}>
         <NavigationPanel />
       </Navbar>
@@ -47,19 +48,15 @@ export default function HomeSection() {
       />
       <div
         className={`
-            end
-            overflow-x-hidden
+            mt-[200svh]
             w-full
             flex-col
             z-30
-            mt-[300dvh]
-            transition-opacity
-            duration-700
-            ${entered ? "flex opacity-100" : "hidden opacity-0"}
+            ${entered ? "flex" : "hidden"}
           `}
       >
         <AboutSection />
-        <JokerSection setShowNavbar={setShowNavbar} showNavbar={showNavbar} />
+        <JokerSection />
         <ArtistsSection />
         <HallOfFame />
         <Footer />

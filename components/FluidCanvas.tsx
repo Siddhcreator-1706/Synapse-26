@@ -10,14 +10,14 @@ interface FluidCanvasProps {
 }
 
 const FluidCanvas: FC<FluidCanvasProps> = ({ className }) => {
-    return (
-        <Canvas
-            className={className}
-            style={{
-                position: "fixed",
-                inset: 0,
-                width: "100vw",
-                height: "100dvh",
+  return (
+    <Canvas
+      className={className}
+      style={{
+        position: "fixed",
+        inset: 0,
+        width: "100vw",
+        height: "100vh",
 
         zIndex: 9999,
         mixBlendMode: "lighten",
@@ -33,8 +33,8 @@ const FluidCanvas: FC<FluidCanvasProps> = ({ className }) => {
           force={2}
           distortion={1.8}
           radius={0.2}
-          //   velocityDissipation={0.985}
-          //   densityDissipation={0.92}
+        //   velocityDissipation={0.985}
+        //   densityDissipation={0.92}
         />
       </EffectComposer>
     </Canvas>

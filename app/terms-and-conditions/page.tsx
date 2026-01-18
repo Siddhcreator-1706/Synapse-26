@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Navbar } from "@/components/ui/Resizable-navbar";
 import NavigationPanel from "@/components/ui/NavigationPanel";
 import Footer from "@/components/ui/Footer";
-import Link from "next/link";
 
 const TERMS_CONTENT = [
   {
@@ -58,11 +57,11 @@ const styles = {
 
 export default function Terms() {
 
-    return (
-        <div className="relative w-screen min-h-[100dvh] overflow-x-hidden  text-white">
-            <Navbar visible={true}>
-                <NavigationPanel />
-            </Navbar>
+  return (
+    <div className="relative w-screen min-h-[100svh] overflow-x-hidden  text-white">
+      <Navbar visible={true}>
+        <NavigationPanel />
+      </Navbar>
 
       <div
         className="fixed left-0 right-0 bottom-0 top-24 z-0

@@ -415,32 +415,27 @@ export default function HallOfFame() {
         ScrollTrigger.create({
           trigger: hallContainerRef.current!,
           start: "top top",
-          end: "+=200%",
-          scrub: 1,
+          end: "bottom top",
+          scrub: true,
           pin: true,
           anticipatePin: 1,
-          invalidateOnRefresh: true,
           onRefreshInit: calculateStartScale,
 
           onUpdate: (self) => {
             if (!hero) return;
 
-            const eased = gsap.parseEase("power3.out")(
+            const eased = gsap.parseEase("power2.out")(
               Math.min(self.progress / 0.6, 1)
             );
 
-            // HERO - Smoother scaling with enhanced easing
-            gsap.to(hero, {
+            // HERO
+            gsap.set(hero, {
               scaleX: gsap.utils.interpolate(startScaleX, 1, eased),
               scaleY: gsap.utils.interpolate(startScaleY, 1, eased),
               borderRadius: `${gsap.utils.interpolate(0, 16, self.progress)}px`,
-              duration: 0.3,
-              ease: "power3.out",
-              overwrite: "auto",
-              force3D: true,
             });
 
-            // GRID - Enhanced entrance animations with back.out easing
+            // GRID
             const mode = getActiveMode();
 
             gridImages.forEach((image, index) => {
@@ -448,15 +443,11 @@ export default function HallOfFame() {
               if (!item || !isItemVisible(image)) return;
 
               if (self.progress < image.delay) {
-                gsap.to(item, {
+                gsap.set(item, {
                   x: image.startX,
                   y: image.startY,
                   opacity: 0,
                   scale: 0.4,
-                  duration: 0.2,
-                  ease: "power2.in",
-                  overwrite: "auto",
-                  force3D: true,
                 });
                 return;
               }
@@ -467,18 +458,11 @@ export default function HallOfFame() {
                 (self.progress - image.delay) / 0.55
               );
 
-              // Apply back.out easing for slight overshoot effect
-              const backEased = gsap.parseEase("back.out(1.7)")(p);
-
-              gsap.to(item, {
+              gsap.set(item, {
                 x: gsap.utils.interpolate(image.startX, 0, p),
                 y: gsap.utils.interpolate(image.startY, 0, p),
                 opacity: gsap.utils.interpolate(0, 1, p),
-                scale: gsap.utils.interpolate(0.4, 1, backEased),
-                duration: 0.4,
-                ease: "power2.out",
-                overwrite: "auto",
-                force3D: true,
+                scale: gsap.utils.interpolate(0.4, 1, p),
               });
             });
           },
@@ -499,7 +483,7 @@ export default function HallOfFame() {
   return (
     <div className="relative overflow-hidden w-full bg-black">
       <div ref={hallContainerRef} className="relative">
-        <div className="h-[100dvh] w-full bg-black">
+        <div className="h-[100svh] w-full bg-black">
           {/* Mobile Grid (3x3) */}
           <div className="md:hidden absolute inset-0 flex items-center justify-center p-2">
             <div
@@ -516,7 +500,7 @@ export default function HallOfFame() {
                   <div
                     key={`mobile-${index}`}
                     ref={setMobileGridRef(index)}
-                    className="rounded-lg overflow-hidden shadow-2xl transition-transform duration-300 hover:scale-105 hover:z-20 cursor-pointer"
+                    className="rounded-lg overflow-hidden shadow-2xl"
                     style={{
                       gridColumn: `${(image.mobileCol ?? image.gridPosition.col) + 1
                         } / span ${image.mobileColSpan ?? 1}`,
@@ -543,7 +527,6 @@ export default function HallOfFame() {
                   gridColumn: "2 / 3",
                   gridRow: "2 / 3",
                   transformOrigin: "center center",
-                  willChange: "transform",
                 }}
               >
                 <img
@@ -575,7 +558,7 @@ export default function HallOfFame() {
                   <div
                     key={`tablet-${index}`}
                     ref={setTabletGridRef(index)}
-                    className="rounded-xl overflow-hidden shadow-2xl transition-transform duration-300 hover:scale-105 hover:z-20 cursor-pointer"
+                    className="rounded-xl overflow-hidden shadow-2xl"
                     style={{
                       gridColumn: `${(image.tabletCol ?? image.gridPosition.col) + 1
                         } / span ${image.tabletColSpan ?? image.colSpan ?? 1}`,
@@ -602,7 +585,6 @@ export default function HallOfFame() {
                   gridColumn: "2 / 5",
                   gridRow: "2 / 4",
                   transformOrigin: "center center",
-                  willChange: "transform",
                 }}
               >
                 <img
@@ -632,7 +614,7 @@ export default function HallOfFame() {
                   <div
                     key={`desktop-${index}`}
                     ref={setDesktopGridRef(index)}
-                    className="rounded-xl overflow-hidden shadow-2xl transition-transform duration-300 hover:scale-105 hover:z-20 cursor-pointer"
+                    className="rounded-xl overflow-hidden shadow-2xl"
                     style={{
                       gridColumn: `${image.gridPosition.col + 1} / span ${image.colSpan ?? 1
                         }`,
@@ -659,7 +641,6 @@ export default function HallOfFame() {
                   gridColumn: "3 / 5",
                   gridRow: "2 / 4",
                   transformOrigin: "center center",
-                  willChange: "transform",
                 }}
               >
                 <img

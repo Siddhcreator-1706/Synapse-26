@@ -31,27 +31,27 @@ const EVENTS: EventItem[] = [
 
 export default function EventsPage() {
   const router = useRouter();
-  const [revealed, setRevealed] = useState<Record<string, boolean>>({});
-  const [revealAll, setRevealAll] = useState(false);
+  const [revealedCards, setRevealedCards] = useState<Set<string>>(new Set());
 
-  const handleCardClick = (slug: string) => {
-    if (!revealed[slug]) {
-      setRevealed((p) => ({ ...p, [slug]: true }));
-      return;
+  const handleCardClick = (slug: string, isFlipped: boolean) => {
+    if (isFlipped) {
+      router.push(`/events/${slug}`);
     }
-    router.push(`/events/${slug}`);
+  };
+
+  const revealCard = (slug: string) => {
+    setRevealedCards((prev) => {
+      const newSet = new Set(prev);
+      newSet.add(slug);
+      return newSet;
+    });
   };
 
   const toggleRevealAll = () => {
-    const next = !revealAll;
-    setRevealAll(next);
-
-    if (next) {
-      const map: Record<string, boolean> = {};
-      EVENTS.forEach((e) => (map[e.slug] = true));
-      setRevealed(map);
+    if (revealedCards.size === EVENTS.length) {
+      setRevealedCards(new Set());
     } else {
-      setRevealed({});
+      setRevealedCards(new Set(EVENTS.map((e) => e.slug)));
     }
   };
 
@@ -79,48 +79,38 @@ export default function EventsPage() {
             events
           </h1>
 
-          <div className=" absolute right-4 sm:right-6 lg:right-10 top-full mt-4 sm:mt-6 text-right leading-snug select-none font-joker ">
+          <div className="absolute flex flex-col items-end right-4 sm:right-9 lg:right-15 top-[90%] mt-4 mb-8 sm:mt-6 text-right leading-snug select-none font-jqka">
             <button
               onClick={toggleRevealAll}
-              className=" block text-[10px] sm:text-xs md:text-sm opacity-80 hover:opacity-100 transition-opacity "
+              className="self-end text-xs sm:text-base md:text-lg opacity-60 hover:opacity-100 transition-opacity"
             >
               👁 Reveal / Unreveal all
             </button>
 
-            <div className=" mt-1 text-[9px] sm:text-[10px] md:text-xs opacity-60 ">
-              Tap on card to reveal
+            <div className="text-xs sm:text-base md:text-lg opacity-60 mb-3">
+              Hover to reveal • Click to explore
             </div>
           </div>
+
         </section>
 
         {/* CARDS */}
-        <section className="px-4 sm:px-10 lg:px-24 py-20 sm:py-28 lg:py-40">
-          <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-0 md:gap-x-6 lg:gap-x-10 gap-y-16 md:gap-y-12 lg:gap-y-4">
+        <section className="px-4 py-20">
+          <div className="grid grid-cols-3 gap-x-4 gap-y-4">
             {EVENTS.map((event, index) => {
-              const isFlipped = revealAll || revealed[event.slug];
+              const isFlipped = revealedCards.has(event.slug);
 
               return (
                 <React.Fragment key={event.slug}>
-                  <div className="flex justify-center">
+                  <div className="flex justify-center items-center h-full">
                     <div
-                      onClick={() => handleCardClick(event.slug)}
-                      className={`relative cursor-pointer transform-gpu  ${
-                        isFlipped ? "group" : ""
-                      }`}
+                      onMouseEnter={() => revealCard(event.slug)}
+                      onClick={() => handleCardClick(event.slug, isFlipped)}
+                      className="relative cursor-pointer transform-gpu"
                       style={{ perspective: "1500px" }}
                     >
-                      {/* CARD FRAME — driven by PNG ratio */}
-                      <div
-                        className="
-    relative
-    w-[200px]
-    sm:w-[320px]
-    md:w-[280px]
-    lg:w-[340px]
-    xl:w-[420px]
-    aspect-[457/640]
-  "
-                      >
+                      {/* CARD FRAME — responsive sizing */}
+                      <div className="relative w-[110px] xs:w-[130px] sm:w-[180px] md:w-[220px] lg:w-[260px] xl:w-[320px] 2xl:w-[400px] aspect-[457/640]">
                         <div
                           className="relative w-full h-full transition-transform ease-in-out"
                           style={{
@@ -159,31 +149,15 @@ export default function EventsPage() {
                               backgroundClip: "content-box",
                             }}
                           >
-                            {/* OVERLAY */}
-                            <div
-                              className="
-                                absolute inset-0
-                                bg-gradient-to-t
-                                from-black/70 via-black/0 to-transparent
-                                opacity-30 lg:opacity-0
-                                transition-opacity duration-300
-                                lg:group-hover:opacity-100
-                              "
-                            />
-
                             {/* TITLE */}
                             <div
                               className="
-    absolute bottom-4 sm:bottom-6 lg:bottom-10
+    absolute bottom-2 xs:bottom-2 sm:bottom-3 md:bottom-4 lg:bottom-5 xl:bottom-7 2xl:bottom-9
     left-0 right-0
-    px-4 sm:px-6 lg:px-8
+    px-1.5 xs:px-2 sm:px-3 md:px-4 lg:px-5 xl:px-7 2xl:px-8
     font-card
-    text-[18px] sm:text-[22px] md:text-[26px] lg:text-[32px]
+    text-[9px] xs:text-[10px] sm:text-[14px] md:text-[17px] lg:text-[20px] xl:text-[26px] 2xl:text-[32px]
     text-white text-center
-    opacity-100 lg:opacity-0
-    transition-opacity duration-300
-    pointer-events-none
-    lg:group-hover:opacity-100
     leading-tight
   "
                             >
@@ -195,10 +169,8 @@ export default function EventsPage() {
                     </div>
                   </div>
 
-                  {/* EMPTY COLUMN — desktop cross layout only */}
-                  {index !== EVENTS.length - 1 && (
-                    <div className="hidden lg:block" />
-                  )}
+                  {/* EMPTY COLUMN — cross layout pattern */}
+                  {index !== EVENTS.length - 1 && <div className="h-full" />}
                 </React.Fragment>
               );
             })}

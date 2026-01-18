@@ -12,7 +12,11 @@ const PRODUCTS = [
     slug: "synapse-tee-1",
     name: "Synapse’26 Exclusive Tee",
     price: 400,
-    image: "/images_merch/Tshirt.jpeg",
+    image: "/images_merch/Tshirt2.jpeg",
+    images: [
+      "/images_merch/Tshirt2.jpeg",
+      "/images_merch/Tshirt.jpeg",
+    ],
     sizes: ["S", "M", "L", "XL", "2XL"],
     note: "* Merch should be collected from the help desk on the day of fest.",
     features: [
@@ -33,8 +37,8 @@ export default function ProductPage() {
   const product = PRODUCTS.find((p) => p.slug === slug);
   if (!product) return null;
 
-  // placeholder thumbnails (same image for now)
-  const images = [product.image, product.image, product.image];
+  // Use real images from data
+  const images = product.images;
 
   return (
     <div className="w-full bg-black text-white min-h-[100dvh] pt-20">

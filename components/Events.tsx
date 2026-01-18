@@ -94,9 +94,8 @@ export default function EventsPage() {
                 <div key={event.slug} className="flex justify-center">
                   <div
                     onClick={() => handleCardClick(event.slug)}
-                    className={`relative w-[700px] h-[600px] cursor-pointer ${
-                      isFlipped ? "group" : ""
-                    }`}
+                    className={`relative w-[700px] h-[600px] cursor-pointer ${isFlipped ? "group" : ""
+                      }`}
                     style={{ perspective: "1500px" }}
                   >
                     <div

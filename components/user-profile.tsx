@@ -99,7 +99,7 @@ export default function UserProfile() {
   };
 
   return (
-    <div ref={ref} className="min-h-[100dvh] bg-background px-4 py-6 md:px-8 md:py-12">
+    <div ref={ref} className="min-h-[100svh] bg-background px-4 py-6 md:px-8 md:py-12">
       {/* HEADER */}
       <div className="max-w-7xl mx-auto mb-6 md:mb-10">
         <button
@@ -201,11 +201,10 @@ export default function UserProfile() {
                         {event.name}
                       </h3>
                       <span
-                        className={`px-2 py-0.5 md:px-3 md:py-1 rounded-full text-xs md:text-sm whitespace-nowrap font-medium ${
-                          event.status === "Registered"
+                        className={`px-2 py-0.5 md:px-3 md:py-1 rounded-full text-xs md:text-sm whitespace-nowrap font-medium ${event.status === "Registered"
                             ? "bg-green-500/20 text-green-400"
                             : "bg-orange-500/20 text-orange-400"
-                        }`}
+                          }`}
                       >
                         {event.status}
                       </span>
@@ -235,11 +234,10 @@ export default function UserProfile() {
                   2 Days Accommodation
                 </p>
                 <span
-                  className={`px-3 py-1 rounded-full text-xs md:text-sm font-medium ${
-                    hasAccommodation
+                  className={`px-3 py-1 rounded-full text-xs md:text-sm font-medium ${hasAccommodation
                       ? "bg-green-500/20 text-green-400"
                       : "bg-orange-500/20 text-orange-400"
-                  }`}
+                    }`}
                 >
                   {hasAccommodation ? "Registered" : "Unregistered"}
                 </span>

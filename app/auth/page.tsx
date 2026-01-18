@@ -26,7 +26,7 @@ export default function AuthFlipPage() {
   };
 
   return (
-    <div className="flex min-h-[100dvh]">
+    <div className="flex min-h-[100svh]">
       {/* Left Side - Joker Card Image (shared) */}
       <div className="fixed hidden md:flex md:w-1/2 h-full bg-[#1a1a1a]">
         {/* Dice Logo */}
@@ -56,27 +56,25 @@ export default function AuthFlipPage() {
       </div>
 
       {/* Right Side - Flip Container */}
-      <div className="flex max-h-[100dvh] w-full md:w-1/2 md:ml-auto items-center justify-center bg-[#050505] px-6 py-12">
+      <div className="flex max-h-[100svh] w-full md:w-1/2 md:ml-auto items-center justify-center bg-[#050505] px-6 py-12">
         <div className="w-full max-w-[582px] [perspective:1200px] flex items-center justify-center min-h-[600px]">
           <div
             className={`
               relative w-full
               transition-transform duration-700
               [transform-style:preserve-3d]
-              ${
-                view === "login" || view === "otp"
-                  ? "[transform:rotateY(0deg)]"
-                  : "[transform:rotateY(180deg)]"
+              ${view === "login" || view === "otp"
+                ? "[transform:rotateY(0deg)]"
+                : "[transform:rotateY(180deg)]"
               }
             `}
           >
             {/* FRONT: Login + OTP */}
             <div
-              className={`[backface-visibility:hidden] flex items-center justify-center ${
-                view === "login" || view === "otp"
+              className={`[backface-visibility:hidden] flex items-center justify-center ${view === "login" || view === "otp"
                   ? "relative"
                   : "absolute inset-0"
-              }`}
+                }`}
             >
               {view === "login" && (
                 <LoginBox
@@ -95,11 +93,10 @@ export default function AuthFlipPage() {
 
             {/* BACK: Register + Forgot */}
             <div
-              className={`[backface-visibility:hidden] [transform:rotateY(180deg)] flex items-center justify-center ${
-                view === "register" || view === "forgot"
+              className={`[backface-visibility:hidden] [transform:rotateY(180deg)] flex items-center justify-center ${view === "register" || view === "forgot"
                   ? "relative"
                   : "absolute inset-0"
-              }`}
+                }`}
             >
               {view === "register" && (
                 <RegisterBox

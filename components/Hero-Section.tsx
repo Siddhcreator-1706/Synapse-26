@@ -359,6 +359,7 @@ export default function HeroSection({
         },
       },
     });
+
     masterTLRef.current = masterTL;
 
     masterTL.set("#part3_2", {
@@ -553,8 +554,7 @@ export default function HeroSection({
           ease: "none",
         },
         "together2"
-      )
-      .to(".screen-container", { duration: 1, ease: "none" });
+      ).to({}, { duration: 5, ease: "none" });
   }, []);
 
   const initScrollProgress = useCallback(() => {
@@ -745,76 +745,73 @@ export default function HeroSection({
         </>
       ) : <></>
       }
-      <>
+      <div className="hero relative inset-0 h-[100svh] z-25" ref={heroRef}>
+        <div id="maskLayer" className="absolute inset-0 opacity-100 " ref={maskLayerRef} style={{
+          WebkitMaskImage: 'url("/images_home/inkReveal2.gif")',
+          WebkitMaskRepeat: 'no-repeat',
+          WebkitMaskPosition: 'center',
+          WebkitMaskSize: '0% 0%',
+          maskImage: 'url("/images_home/inkReveal2.gif")',
+          maskRepeat: 'no-repeat',
+          maskPosition: 'center',
+          maskSize: '0% 0%',
+        }}>
+          <img id="coloredImage" src="/images_home/RedHand2.jpeg" alt="Red Hand" ref={coloredImageRef} className="absolute inset-0 h-full w-full object-contain max-[600px]:rotate-270 min-[1000px]:object-cover pointer-events-none max-[600px]:scale-250" />
 
+          <div id="flipCard" className="absolute inset-0 transform-3d will-change-transform" ref={flipCardRef}>
+            <img id="redCard" className="absolute inset-0 w-full h-full object-contain max-[600px]:rotate-270 min-[1000px]:object-cover pointer-events-none backface-hidden max-[600px]:scale-250" src="/images_home/redcard4.png" alt="Red Card" ref={cardRef} />
 
-        <div className="hero relative inset-0 h-[100dvh] z-25" ref={heroRef}>
-          <div id="maskLayer" className="absolute inset-0 opacity-100 " ref={maskLayerRef} style={{
-            WebkitMaskImage: 'url("/images_home/inkReveal2.gif")',
-            WebkitMaskRepeat: 'no-repeat',
-            WebkitMaskPosition: 'center',
-            WebkitMaskSize: '0% 0%',
-            maskImage: 'url("/images_home/inkReveal2.gif")',
-            maskRepeat: 'no-repeat',
-            maskPosition: 'center',
-            maskSize: '0% 0%',
-          }}>
-            <img id="coloredImage" src="/images_home/RedHand2.jpeg" alt="Red Hand" ref={coloredImageRef} className="absolute inset-0 h-full w-full object-contain max-[600px]:rotate-270 min-[1000px]:object-cover pointer-events-none max-[600px]:scale-250" />
-
-            <div id="flipCard" className="absolute inset-0 transform-3d" ref={flipCardRef}>
-              <img id="redCard" className="absolute inset-0 w-full h-full object-contain max-[600px]:rotate-270 min-[1000px]:object-cover pointer-events-none backface-hidden max-[600px]:scale-250" src="/images_home/redcard4.png" alt="Red Card" ref={cardRef} />
-
-              <div id="part3_2" ref={part3_2Ref} style={{
-                backgroundImage:
-                  "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.15) 35%, rgba(0,0,0,0.45) 65%, rgba(0,0,0,0.75) 85%, #000 100%), url(/images_home/image_part3_2.png)",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }} className=" absolute inset-0 flex flex-col items-center justify-center opacity-100 will-change-transform backface-hidden transform-[rotateY(180deg)]">
-                <div className="screen-container relative w-screen h-[100dvh] flex items-center justify-center perspective-[1000px] transform-3d" ref={screenContainerRef}>
-                  <div ref={frontScreenRef} className="screen-front absolute inset-0 bg-black bg-[url('/images_home/part3-image.png')] bg-no-repeat bg-center bg-contain z-2 backface-hidden border-4 border-solid rounded " style={{ borderColor: "rgba(250,235,215,0)" }}></div>
-                  <div className="center-joker-container absolute inset-0 flex items-center justify-center transform-[rotateY(180deg)] backface-hidden z-1">
-                    <img src="/images_home/card_center.png" className="center-joker w-full h-auto rotate-[-64deg] object-contain" alt="Joker Card" />
-                  </div>
+            <div id="part3_2" ref={part3_2Ref} style={{
+              backgroundImage:
+                "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.15) 35%, rgba(0,0,0,0.45) 65%, rgba(0,0,0,0.75) 85%, #000 100%), url(/images_home/image_part3_2.png)",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }} className=" absolute inset-0 flex flex-col items-center justify-center opacity-100 will-change-transform backface-hidden transform-[rotateY(180deg)]">
+              <div className="screen-container relative w-screen h-[100svh] flex items-center justify-center perspective-[1000px] transform-3d" ref={screenContainerRef}>
+                <div ref={frontScreenRef} className="screen-front absolute inset-0 bg-black bg-[url('/images_home/part3-image.png')] bg-no-repeat bg-center bg-contain z-2 backface-hidden border-4 border-solid rounded " style={{ borderColor: "rgba(250,235,215,0)" }}></div>
+                <div className="center-joker-container absolute inset-0 flex items-center justify-center transform-[rotateY(180deg)] backface-hidden z-1">
+                  <img src="/images_home/card_center.png" className="center-joker w-full h-auto rotate-[-64deg] object-contain" alt="Joker Card" />
                 </div>
-              </div>
-
-              <div id="part3" ref={part3Ref} className={`absolute inset-0 w-full h-[100dvh] transform-[rotateY(180deg)] backface-hidden ${part3Active ? "pointer-events-auto" : "pointer-events-none"}`}>
-                <div className="register-btn absolute bottom-2/5  max-[450px]:left-1/2 min-[450px]:bottom-[40px] min-[450px]:right-[40px] md:bottom-[60px] md:right-[60px]">
-                  <NavbarButton href="/auth" variant="register">
-                    Register
-                  </NavbarButton>
-                </div>
-
-                <div className="title-wrapper flex justify-center pt-[80px] sm:pt-[60px] md:pt-[120px] h-[calc(100dvh-120px)] md:h-[calc(100dvh-200px)]">
-                  <h1 className="title text-4xl min-[450px]:text-6xl sm:text-7xl md:text-[clamp(40px,12vw,140px)] font-joker leading-none text-center px-4" ref={titleRef}>synapse' 26</h1>
-                </div>
-                <div
-                  ref={scrollHintHomeRef}
-                  className="scroll-hint-home fixed bottom-0 left-1/2 -translate-x-1/2 z-50
-               text-white select-none pointer-events-none"
-                >
-                  <ChevronDown className="stroke-[3px] h-4 w-5 sm:w-8 sm:h-8 translate-y-full" />
-                  <ChevronDown className="stroke-[3px] h-4 w-5 sm:w-8 sm:h-8 translate-y-1/2" />
-                  <ChevronDown className="stroke-[3px] h-4 w-5 sm:w-8 sm:h-8" />
-                  <ChevronDown className="stroke-[3px] h-4 w-5 sm:w-8 sm:h-8 -translate-y-1/2" />
-                </div>
-
-                <CountdownTimer targetDate={new Date("2026-02-26 00:00:00")} />
               </div>
             </div>
-            <div
-              ref={scrollHintRef}
-              className=" absolute left-1/2 -translate-x-1/2  bottom-5 md:bottom-[30px] z-[100] flex flex-col items-center justify-center gap-1 w-[50px] h-[100px]  md:w-[70px] md:h-[120px] font-jqka text-amber-50 text-[10px] md:text-xs  leading-tight tracking-wide uppercase border border-amber-50  rounded-full backdrop-blur-[2px]"
-            >
-              <span className="text-center">
-                Scroll <br /> To <br /> Explore
-              </span>
 
-              <p className="text-xl md:text-3xl mt-1">↓</p>
+            <div id="part3" ref={part3Ref} className={`absolute inset-0 w-full h-[100svh] transform-[rotateY(180deg)] backface-hidden ${part3Active ? "pointer-events-auto" : "pointer-events-none"}`}>
+              <div className="register-btn absolute bottom-2/5  max-[450px]:left-1/2 min-[450px]:bottom-[40px] min-[450px]:right-[40px] md:bottom-[60px] md:right-[60px]">
+                <NavbarButton href="/auth" variant="register">
+                  Register
+                </NavbarButton>
+              </div>
+
+              <div className="title-wrapper flex justify-center pt-[80px] sm:pt-[60px] md:pt-[120px] h-[calc(100svh-120px)] md:h-[calc(100svh-200px)]">
+                <h1 className="title text-4xl min-[450px]:text-6xl sm:text-7xl md:text-[clamp(40px,12vw,140px)] font-joker leading-none text-center px-4" ref={titleRef}>synapse' 26</h1>
+              </div>
+              <div
+                ref={scrollHintHomeRef}
+                className="scroll-hint-home fixed bottom-0 left-1/2 -translate-x-1/2 z-50
+               text-white select-none pointer-events-none"
+              >
+                <ChevronDown className="stroke-[3px] h-4 w-5 sm:w-8 sm:h-8 translate-y-full" />
+                <ChevronDown className="stroke-[3px] h-4 w-5 sm:w-8 sm:h-8 translate-y-1/2" />
+                <ChevronDown className="stroke-[3px] h-4 w-5 sm:w-8 sm:h-8" />
+                <ChevronDown className="stroke-[3px] h-4 w-5 sm:w-8 sm:h-8 -translate-y-1/2" />
+              </div>
+
+              <CountdownTimer targetDate={new Date("2026-02-26 00:00:00")} />
             </div>
           </div>
+          <div
+            ref={scrollHintRef}
+            className=" absolute left-1/2 -translate-x-1/2  bottom-5 md:bottom-[30px] z-[100] flex flex-col items-center justify-center gap-1 w-[50px] h-[100px]  md:w-[70px] md:h-[120px] font-jqka text-amber-50 text-[10px] md:text-xs  leading-tight tracking-wide uppercase border border-amber-50  rounded-full backdrop-blur-[2px]"
+          >
+            <span className="text-center">
+              Scroll <br /> To <br /> Explore
+            </span>
+
+            <p className="text-xl md:text-3xl mt-1">↓</p>
+          </div>
         </div>
-      </>
+      </div>
+
       <audio
         ref={audioRef}
         id="bgMusic"

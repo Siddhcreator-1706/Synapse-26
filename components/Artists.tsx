@@ -70,6 +70,14 @@ export default function ArtistsSection() {
         fallback: "/images_home/RaviGupta.jpg",
       },
     },
+    {
+      name: "Aditya Gadhvi",
+      date: "10 Jan 2026",
+      image: {
+        avif: "/images_home/AdityaGadhvi.avif",
+        fallback: "/images_home/AdityaGadhvi.jpeg",
+      },
+    },
   ]);
 
   const artistSectionRef = useRef<HTMLDivElement>(null);
@@ -101,7 +109,8 @@ export default function ArtistsSection() {
     if (!imagesContainerRef.current) return;
 
     const items = imagesContainerRef.current.querySelectorAll(".carousel-item");
-    const spacing = window.innerWidth * 0.45;
+    const isMobile = window.innerWidth < 600;
+    const spacing = isMobile ? window.innerWidth * 0.75 : window.innerWidth * 0.45;
 
     items.forEach((item, i) => {
       const element = item as HTMLElement;
@@ -122,13 +131,19 @@ export default function ArtistsSection() {
         element.classList.add("center");
         zIndex = 10;
         opacity = 1;
+        scale = 1;
       } else {
         element.classList.remove("center");
 
-        if (window.innerWidth < 360) {
-          // Force invisible on mobile to avoid overlap
-          opacity = 0;
-          scale = 0.5;
+        if (isMobile) {
+          // Mobile: show only adjacent items with reduced opacity
+          if (Math.abs(diff) === 1) {
+            opacity = 0.4;
+            scale = 0.7;
+          } else {
+            opacity = 0;
+            scale = 0.5;
+          }
         } else {
           // Desktop Fade Logic
           if (absOffset > spacing) {
@@ -246,9 +261,12 @@ export default function ArtistsSection() {
 
   return (
     <div
-      className="artists-section relative bg-black h-[115dvh]"
+      className="artists-section relative bg-black overflow-x-clip"
       id="artistsSection"
       ref={artistSectionRef}
+      style={{
+        height: "100svh",
+      }}
     >
       <div className="artists-content relative top-[-1.6px] right-[-1px] h-full flex flex-col">
         <svg
@@ -270,22 +288,28 @@ export default function ArtistsSection() {
           />
         </svg>
 
-        <h1
-          id="artistsTitle"
-          className="font-joker text-[clamp(3rem,12vw,7.5rem)] px-8 leading-none text-white lowercase text-center pt-8"
-        >
-          ARTISTS
-        </h1>
+        {/* Title at top */}
+        <div className="flex-shrink-0 pt-1 pb-12">
+          <h1
+            id="artistsTitle"
+            className="font-joker text-[clamp(2.5rem,10vw,6rem)] px-8 leading-none text-white lowercase text-center"
+          >
+            ARTISTS
+          </h1>
+        </div>
 
-        <div className="carousel relative flex-1 overflow-hidden flex items-center justify-center pb-[5dvh]">
-          <div className="black-line absolute left-0 right-0 top-[45%] h-1 bg-white -translate-y-1/2 z-0"></div>
+        {/* Carousel - Center area */}
+        <div className="carousel relative flex-1 min-h-0 flex items-center justify-center">
+          {/* White line through center - Perfectly centered */}
+          <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-[2px] bg-white z-0"></div>
 
           <div
             id="artistPathDot"
-            className="fixed  w-14 h-14 md:w-22.5 md:h-22.5 bg-[#ff0000] rounded-full blur-[20px] pointer-events-none z-5 opacity-0 -translate-x-1/2 -translate-y-1/2"
+            className="fixed w-14 h-14 md:w-22.5 md:h-22.5 bg-[#ff0000] rounded-full blur-[20px] pointer-events-none z-5 opacity-0 -translate-x-1/2 -translate-y-1/2"
             ref={artistDotRef}
           ></div>
 
+          {/* Images Container - Centered */}
           <div
             className="images-container relative w-full h-full flex items-center justify-center"
             id="imagesContainer"
@@ -294,11 +318,14 @@ export default function ArtistsSection() {
             {artists.map((artist, i) => (
               <div
                 key={i}
-                className={`carousel-item absolute transition-all duration-600 ease-in-out ? 'center' : ''
-                                    }`}
+                className={`carousel-item absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-600 ease-in-out ${i === currentIndex ? "center" : ""
+                  }`}
                 onClick={() => {
                   setCurrentIndex(i);
                   resetCarouselTimer();
+                }}
+                style={{
+                  transform: `translate(-50%, -50%) translateX(0px) scale(1)`,
                 }}
               >
                 <picture>
@@ -310,89 +337,100 @@ export default function ArtistsSection() {
                     src={artist.image.fallback}
                     alt={artist.name}
                     loading="lazy"
-                    className="block object-cover z-10 transition-transform duration-300 md:hover:scale-110"
+                    className="block object-cover z-10 transition-transform duration-300 md:hover:scale-110 cursor-pointer"
                     style={{
                       width:
                         i === currentIndex
-                          ? "clamp(180px, 42vw, 520px)"
-                          : "clamp(90px, 18vw, 230px)",
+                          ? "clamp(200px, 50vw, 480px)"
+                          : "clamp(120px, 25vw, 230px)",
                       height:
                         i === currentIndex
-                          ? "clamp(120px, 30vw, 420px)"
-                          : "clamp(65px, 20vw, 230px)",
+                          ? "clamp(120px, 35vw, 390px)"
+                          : "clamp(90px, 25vw, 230px)",
                     }}
                     sizes="(max-width: 768px) 80vw, 520px"
                   />
                 </picture>
-
-                {i === currentIndex && (
-                  <div className="mt-4 border-t-2 border-b-2 border-white py-2 px-6 text-center text-white">
-                    <h2 className="text-2xl md:text-3xl font-jqka uppercase">
-                      {artist.name}
-                    </h2>
-                    <p className="text-base font-jqka md:text-xl">
-                      {artist.date}
-                    </p>
-                  </div>
-                )}
               </div>
             ))}
           </div>
 
+          {/* Navigation buttons */}
           <button
             className="
-    group
-    absolute top-[45%] -translate-y-1/2
-    flex items-center justify-center
-    bg-red-600 hover:bg-white
-    transition-colors duration-400
-    z-20 cursor-pointer
-  "
-            onClick={prevArtist}
+          group
+          absolute top-1/2 -translate-y-1/2
+          flex items-center justify-center
+          bg-red-600 hover:bg-white
+          transition-colors duration-400
+          z-20 cursor-pointer
+        "
+            onClick={nextArtist}
             style={{
-              width: "clamp(24px, 6vw, 62px)",
-              height: "clamp(22px, 5vw, 54px)",
-              right: "calc(50% + clamp(180px, 42vw, 520px)/2)",
+              width: "clamp(32px, 6vw, 62px)",
+              height: "clamp(28px, 5vw, 54px)",
+              left: "calc(clamp(200px, 50vw, 480px)/2 + 50%)",
             }}
+            aria-label="Next artist"
           >
             <div
               className="
-      bg-white
-      group-hover:bg-red-600
-      transition-colors duration-400
-      rotate-270
-    "
+            bg-white
+            group-hover:bg-red-600
+            transition-colors duration-400
+            rotate-90
+          "
               style={{
-                width: "clamp(12px, 2.5vw, 33px)",
-                height: "clamp(8px, 1.8vw, 22px)",
+                width: "clamp(14px, 2.5vw, 33px)",
+                height: "clamp(10px, 1.8vw, 22px)",
                 clipPath: "polygon(50% 0%, 0% 100%, 100% 100%)",
               }}
             />
           </button>
 
           <button
-            className="group absolute top-[45%] -translate-y-1/2
-              bg-red-600 hover:bg-white
-      transition-colors duration-400
-             flex items-center justify-center transition z-20 cursor-pointer"
-            onClick={nextArtist}
+            className="
+          group
+          absolute top-1/2 -translate-y-1/2
+          flex items-center justify-center
+          bg-red-600 hover:bg-white
+          transition-colors duration-400
+          z-20 cursor-pointer
+        "
+            onClick={prevArtist}
             style={{
-              width: "clamp(24px, 6vw, 62px)",
-              height: "clamp(22px, 5vw, 54px)",
-              left: "calc(clamp(180px, 42vw, 520px)/2 + 50%)",
+              width: "clamp(32px, 6vw, 62px)",
+              height: "clamp(28px, 5vw, 54px)",
+              right: "calc(clamp(200px, 50vw, 480px)/2 + 50%)",
             }}
+            aria-label="Previous artist"
           >
             <div
-              className="w-8.25 h-5.5 bg-white
-      group-hover:bg-red-600 -rotate-270
-      transition-colors duration-400"
+              className="
+            bg-white
+            group-hover:bg-red-600
+            transition-colors duration-400
+            -rotate-90
+          "
               style={{
-                width: "clamp(12px, 2.5vw, 33px)",
-                height: "clamp(8px, 1.8vw, 22px)",
+                width: "clamp(14px, 2.5vw, 33px)",
+                height: "clamp(10px, 1.8vw, 22px)",
                 clipPath: "polygon(50% 0%, 0% 100%, 100% 100%)",
               }}
             />
           </button>
+        </div>
+
+        {/* Artist Info at bottom */}
+        <div className="flex-shrink-0 pb-6 sm:pb-8 pt-4 flex justify-center px-4 mb-8">
+          <div className="border-t-2 border-b-2 border-white py-3 px-6 text-center text-white bg-black/50 backdrop-blur-sm w-full max-w-md">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-jqka uppercase">
+              {artists[currentIndex].name}
+            </h2>
+            <p className="text-sm sm:text-base md:text-xl font-jqka">
+              {artists[currentIndex].date}
+            </p>
+          </div>
         </div>
       </div>
     </div>
